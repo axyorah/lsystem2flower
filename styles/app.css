@@ -1,0 +1,25 @@
+body {
+    padding-top: 50px;
+}
+
+.box {
+    padding: 50px;
+    margin-top: min(50px, 10%);
+    background-color: rgb(240,240,240);
+    border-radius: 10px;
+}
+
+#canvas {
+    background-color: white;
+}
+
+#lsys {
+    display: flex;
+    flex-direction: column;
+}
+
+.controlsBottom {
+    margin-top: 5%;
+    display: flex;
+    justify-content: space-between;
+}
