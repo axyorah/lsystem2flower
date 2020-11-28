@@ -6,8 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "lsystem",
+    "fractal",
+    "turtle"
+  ],
   "author": "axyorah",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "turtle-canvas": "^0.1.0"
   }
