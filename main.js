@@ -38,7 +38,9 @@ const growOneStep = function() {
 
 const undoOneStep = function() {
     lsys.reset(false);
-    lsys.states.pop();
+    if (lsys.states.length > 1) {
+        lsys.states.pop();
+    }
     lsys.draw();
 }
 
