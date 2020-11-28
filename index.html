@@ -16,6 +16,7 @@
     <div class="container">
         <h1>L-Systems</h1>
         <div class="box">
+            <!--Explanation-->
             <div class="row">
                 <div class="dummy col-0 col-lg-2"></div>
                 <div class="explanation col-12 col-lg-5">
@@ -32,14 +33,29 @@
                             </ul>
                         </p>
                     </div>
-
                 </div>
                 <div class="dummy col-0 col-lg-5"></div>
             </div>
+
+            <!--Canvases and Sliders-->
             <div class="row">
+                <!--Sliders-->
                 <div class="controlsLeft col-12 col-lg-2">
 
+                    <p>'F' segment length: 
+                        <span class="text-secondary ml-2 mt-1" id="flen-span"></span>
+                    </p>
+                    <input type="range" class="custom-range" id="flen" name="flen"
+                        min="1" max="20" onchange="modFLen()">
+                    
+                    <p>Angle: 
+                        <span class="text-secondary ml-2 mt-1" id="angle-span"></span>
+                    </p>
+                    <input type="range" class="custom-range" id="angle" name="angle"
+                        min="1" max="90" onchange="modAngle()">
+                    
                 </div>
+                <!--L-System Canvas-->
                 <div class="lsys col-12 col-lg-5" id="lsys">
                     
                     <canvas id="canvas" height=450 width=500></canvas>
@@ -62,6 +78,7 @@
                     </div>
 
                 </div>
+                <!--Pix2Pix Canvas-->
                 <div class="pix col-12 col-lg-5">
 
                 </div>

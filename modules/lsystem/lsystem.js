@@ -23,14 +23,14 @@ class LSystem {
         console.log(this.rules);
     }
 
-    setDist = function() {
-        //TODO
-        console.log(this.dist);
+    setDist = function(val) {
+        this.dist = val;
+        //console.log(`F-segment length set to: ${this.dist}`);
     }
 
-    setAngle = function() {
-        //TODO
-        console.log(this.angle);
+    setAngle = function(val) {
+        this.angle = val;
+        //console.log(`Angle set to: ${this.angle}`);
     }
 
     reset = function(resetState=true) {

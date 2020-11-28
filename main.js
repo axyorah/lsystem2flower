@@ -1,9 +1,24 @@
 // GLOBALS
+//   DOM
 var canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
-var turtle = new TURTLE("canvas");
-let lsys = new LSystem(turtle, context);
 
+const flen = document.getElementById("flen");
+const flenSpan = document.getElementById("flen-span");
+
+const angle = document.getElementById("angle");
+const angleSpan = document.getElementById("angle-span");
+
+//   Modules
+var turtle = new TURTLE("canvas");
+const lsys = new LSystem(turtle, context);
+
+
+// EVENT FUNCTIONS
+const reset = function() {
+    lsys.reset();
+    lsys.draw();
+}
 
 const growOneStep = function() {
     lsys.reset(false);
@@ -17,7 +32,20 @@ const undoOneStep = function() {
     lsys.draw();
 }
 
-const reset = function() {
-    lsys.reset();
+const modFLen = function() {
+    let val = parseInt(flen.value);
+    flenSpan.innerText = val;
+
+    lsys.reset(false);
+    lsys.setDist(val);
+    lsys.draw();
+}
+
+const modAngle = function() {
+    let val = parseInt(angle.value);
+    angleSpan.innerText = val;
+
+    lsys.reset(false);
+    lsys.setAngle(val);
     lsys.draw();
 }
