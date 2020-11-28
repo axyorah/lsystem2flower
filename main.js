@@ -3,23 +3,26 @@
 var canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 
-const flen = document.getElementById("flen");
-const flenSpan = document.getElementById("flen-span");
+const growBtn = document.getElementById("button-grow");
+const undoBtn = document.getElementById("button-undo");
+const resetBtn = document.getElementById("button-reset");
 
-const angle = document.getElementById("angle");
+const flenRng = document.getElementById("flen");
+const angleRng = document.getElementById("angle");
+
+const flenSpan = document.getElementById("flen-span");
 const angleSpan = document.getElementById("angle-span");
 
-const ruleX = document.getElementById("rule-X");
-const ruleF = document.getElementById("rule-F");
-const ruleOpenBracket = document.getElementById("rule-[");
-const ruleClosedBracket = document.getElementById("rule-]");
-const rulePlus = document.getElementById("rule-+");
-const ruleMinus = document.getElementById("rule--");
+const ruleXBtn = document.getElementById("rule-X");
+const ruleFBtn = document.getElementById("rule-F");
+const ruleOpenBracketBtn = document.getElementById("rule-[");
+const ruleClosedBracketBtn = document.getElementById("rule-]");
+const rulePlusBtn = document.getElementById("rule-+");
+const ruleMinusBtn = document.getElementById("rule--");
 
 //   Modules
 var turtle = new TURTLE("canvas");
 const lsys = new LSystem(turtle, context);
-
 
 // EVENT FUNCTIONS
 const reset = function() {
@@ -40,7 +43,7 @@ const undoOneStep = function() {
 }
 
 const modFLen = function() {
-    let val = parseInt(flen.value);
+    let val = parseInt(flenRng.value);
     flenSpan.innerText = val;
 
     lsys.reset(false);
@@ -49,7 +52,7 @@ const modFLen = function() {
 }
 
 const modAngle = function() {
-    let val = parseInt(angle.value);
+    let val = parseInt(angleRng.value);
     angleSpan.innerText = val;
 
     lsys.reset(false);
@@ -58,7 +61,7 @@ const modAngle = function() {
 }
 
 const modRuleX = function() {
-    let val = ruleX.value;
+    let val = ruleXBtn.value;
 
     lsys.reset(false);
     lsys.setRules('X', val);
@@ -66,7 +69,7 @@ const modRuleX = function() {
 }
 
 const modRuleF = function() {
-    let val = ruleF.value;
+    let val = ruleFBtn.value;
 
     lsys.reset(false);
     lsys.setRules('F', val);
@@ -74,7 +77,7 @@ const modRuleF = function() {
 }
 
 const modRuleOpenBracket = function() {
-    let val = ruleOpenBracket.value;
+    let val = ruleOpenBracketBtn.value;
 
     lsys.reset(false);
     lsys.setRules('[', val);
@@ -82,7 +85,7 @@ const modRuleOpenBracket = function() {
 }
 
 const modRuleClosedBracket = function() {
-    let val = ruleClosedBracket.value;
+    let val = ruleClosedBracketBtn.value;
 
     lsys.reset(false);
     lsys.setRules(']', val);
@@ -90,7 +93,7 @@ const modRuleClosedBracket = function() {
 }
 
 const modRulePlus = function() {
-    let val = rulePlus.value;
+    let val = rulePlusBtn.value;
 
     lsys.reset(false);
     lsys.setRules('+', val);
@@ -98,9 +101,27 @@ const modRulePlus = function() {
 }
 
 const modRuleMinus = function() {
-    let val = ruleMinus.value;
+    let val = ruleMinusBtn.value;
 
     lsys.reset(false);
     lsys.setRules('-', val);
     lsys.draw();
 }
+
+// EVENT LISTENERS
+//   Buttons
+growBtn.addEventListener("click", growOneStep);
+undoBtn.addEventListener("click", undoOneStep);
+resetBtn.addEventListener("click", reset);
+
+//   Sliders
+flenRng.addEventListener("change", modFLen);
+angleRng.addEventListener("change", modAngle);
+
+//   Rules
+ruleXBtn.addEventListener("click", modRuleX);
+ruleFBtn.addEventListener("click", modRuleF);
+ruleOpenBracketBtn.addEventListener("click", modRuleOpenBracket);
+ruleClosedBracketBtn.addEventListener("click", modRuleClosedBracket);
+rulePlusBtn.addEventListener("click", modRulePlus);
+ruleMinusBtn.addEventListener("click", modRuleMinus);

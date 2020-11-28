@@ -31,7 +31,8 @@
                                     placeholder="F[-X][+X]F[-X]+FX" aria-label="rule for X">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" 
-                                        type="button" onclick="modRuleX()">Apply</button>
+                                        type="button">Apply
+                                    </button>
                                 </div>
                             </div>
                             <div class="input-group input-group-sm mb-1">
@@ -42,7 +43,8 @@
                                     placeholder="FF" aria-label="rule for F">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" 
-                                        type="button" onclick="modRuleF()">Apply</button>
+                                        type="button">Apply
+                                    </button>
                                 </div>
                             </div>
                             <div class="input-group input-group-sm mb-1">
@@ -53,7 +55,8 @@
                                     placeholder="[" aria-label="rule for [">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" 
-                                        type="button" onclick="modRuleOpenBracket()">Apply</button>
+                                        type="button">Apply                                        
+                                    </button>
                                 </div>
                             </div>
                             <div class="input-group input-group-sm mb-1">
@@ -64,7 +67,8 @@
                                     placeholder="]" aria-label="rule for ]">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" 
-                                        type="button" onclick="modRuleClosedBracket()">Apply</button>
+                                        type="button">Apply
+                                    </button>
                                 </div>
                             </div>
                             <div class="input-group input-group-sm mb-1">
@@ -75,7 +79,8 @@
                                     placeholder="+" aria-label="rule for +">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" 
-                                        type="button" onclick="modRulePlus()">Apply</button>
+                                        type="button">Apply
+                                    </button>
                                 </div>
                             </div>
                             <div class="input-group input-group-sm mb-1">
@@ -86,7 +91,8 @@
                                     placeholder="-" aria-label="rule for -">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" 
-                                        type="button" onclick="modRuleMinus()">Apply</button>
+                                        type="button">Apply
+                                    </button>
                                 </div>
                             </div>
                         </p>
@@ -100,16 +106,20 @@
                 <!--Sliders-->
                 <div class="controlsLeft col-12 col-lg-2">
                     <p>'F' segment length: 
-                        <span class="text-secondary ml-2 mt-1" id="flen-span">10</span>
+                        <span class="text-secondary ml-2 mt-1" 
+                        id="flen-span">10</span>
                     </p>
-                    <input type="range" class="slider col-12" id="flen" name="flen"
-                        min="1" max="20" value="10" onchange="modFLen()">
+                    <input type="range" class="slider col-12" 
+                        id="flen" name="flen"
+                        min="1" max="20" value="10">
                     
                     <p>Angle: 
-                        <span class="text-secondary ml-2 mt-1" id="angle-span">15</span>
+                        <span class="text-secondary ml-2 mt-1" 
+                            id="angle-span">15</span>
                     </p>
-                    <input type="range" class="slider col-12" id="angle" name="angle"
-                        min="1" max="90" value="15" onchange="modAngle()">                    
+                    <input type="range" class="slider col-12" 
+                        id="angle" name="angle"
+                        min="1" max="90" value="15">                    
                 </div>
 
                 <!--L-System Canvas-->
@@ -120,19 +130,16 @@
                     <div class="controlsBottom">
                         <div class="btn-group" role="group">
                             <button type="button" id="button-undo"
-                                    class="btn btn-outline-secondary"
-                                    onclick="undoOneStep()">
+                                    class="btn btn-outline-secondary">
                                     <span title="undo">&#8630;</span>
                             </button>
                             <button type="button" id="button-grow"
-                                    class="btn btn-outline-secondary"
-                                    onclick="growOneStep()">
+                                    class="btn btn-outline-secondary">
                                     <span title="grow">&#8631;</span>
                             </button>
                         </div>
                         <button type="button" id="button-reset"
-                                class="btn btn-secondary"
-                                onclick="reset()">
+                                class="btn btn-secondary">
                                 Reset</button>
                     </div>
 
