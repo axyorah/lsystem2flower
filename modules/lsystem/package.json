@@ -1,0 +1,17 @@
+{
+  "name": "lsystem",
+  "version": "1.0.0",
+  "description": "draw/undraw l-system one step at a time using turtle graphics ",
+  "main": "lsystem.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "lsystem",
+    "fractal",
+    "turtle"
+  ],
+  "author": "axyorah",
+  "license": "MIT"
+}
