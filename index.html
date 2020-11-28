@@ -23,11 +23,11 @@
                         <p>Rules: 
                             <ul>
                                 <li><code>'X': 'F[-X][X]F[-X]+FX'</code></li>
-                                <li><code>'F':'FF'</code></li>
-                                <li><code>'[':'['</code></li>
-                                <li><code>']':']'</code></li>
-                                <li><code>'+':'+'</code></li>
-                                <li><code>'-':'-'</code></li>
+                                <li><code>'F': 'FF'</code></li>
+                                <li><code>'[': '['</code></li>
+                                <li><code>']': ']'</code></li>
+                                <li><code>'+': '+'</code></li>
+                                <li><code>'-': '-'</code></li>
                             </ul>
                         </p>
                     </div>
@@ -45,10 +45,19 @@
                     
                     <div class="controlsBottom">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-secondary">Grow</button>
-                            <button type="button" class="btn btn-outline-secondary">Undo</button>
+                            <button type="button" id="button-grow"
+                                    class="btn btn-outline-secondary"
+                                    onclick="growOneStep()">
+                                    Grow</button>
+                            <button type="button" id="button-undo"
+                                    class="btn btn-outline-secondary"
+                                    onclick="undoOneStep()">
+                                    Undo</button>
                         </div>
-                        <button type="button" class="btn btn-secondary">Reset</button>
+                        <button type="button" id="button-reset"
+                                class="btn btn-secondary"
+                                onclick="reset()">
+                                Reset</button>
                     </div>
 
                 </div>
