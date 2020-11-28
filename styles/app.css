@@ -5,6 +5,7 @@ body {
 .box {
     padding: 50px;
     margin-top: min(50px, 10%);
+    margin-bottom: min(50px, 10%);
     background-color: rgb(240,240,240);
     border-radius: 10px;
 }
