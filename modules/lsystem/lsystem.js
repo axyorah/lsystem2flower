@@ -71,10 +71,12 @@ class LSystem {
             else if (sym === ']') {
                 turtle.stroke();
                 turtle.penup();
-                turtle.moveTo(...pos_stack[pos_stack.length-1]);
-                turtle.dir = dir_stack[dir_stack.length-1];
-                pos_stack.pop();
-                dir_stack.pop();
+                if (pos_stack.length > 0 && dir_stack.length > 0) {
+                    turtle.moveTo(...pos_stack[pos_stack.length-1]);
+                    turtle.dir = dir_stack[dir_stack.length-1];
+                    pos_stack.pop();
+                    dir_stack.pop();
+                }                
                 turtle.pendown();
             }
         }
