@@ -8,8 +8,8 @@ class LSystem {
         this.reset();
     }
 
-    dist = 10; // pxl
-    angle = 15; // deg
+    dist = 10; // [pxl] length of `F` segment
+    angle = 15; // [deg] angle between child- and parent-branch directions
     states = ['X'];
     rules = {
         'X': 'F[-X][X]F[-X]+FX',
