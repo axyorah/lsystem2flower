@@ -10,7 +10,7 @@ class LSystem {
     angle = 15; // [deg] angle between child- and parent-branch directions
     states = ['X'];
     rules = {
-        'X': 'F[-X][X]F[-X]+FX',
+        'X': 'F[-X][+X]F[-X]+FX',
         'F': 'FF',
         '[': '[',
         ']': ']',
@@ -18,19 +18,19 @@ class LSystem {
         '-': '-',
     };
 
-    setRules = function() {
-        //TODO
-        console.log(this.rules);
+    setRules = function(key, val) {
+        this.rules[key] = val;
+        console.log(`updated rule for ${key}: ${this.rules[key]}`);
     }
 
     setDist = function(val) {
         this.dist = val;
-        //console.log(`F-segment length set to: ${this.dist}`);
+        console.log(`F-segment length set to: ${this.dist}`);
     }
 
     setAngle = function(val) {
         this.angle = val;
-        //console.log(`Angle set to: ${this.angle}`);
+        console.log(`Angle set to: ${this.angle}`);
     }
 
     reset = function(resetState=true) {

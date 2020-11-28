@@ -9,6 +9,13 @@ const flenSpan = document.getElementById("flen-span");
 const angle = document.getElementById("angle");
 const angleSpan = document.getElementById("angle-span");
 
+const ruleX = document.getElementById("rule-X");
+const ruleF = document.getElementById("rule-F");
+const ruleOpenBracket = document.getElementById("rule-[");
+const ruleClosedBracket = document.getElementById("rule-]");
+const rulePlus = document.getElementById("rule-+");
+const ruleMinus = document.getElementById("rule--");
+
 //   Modules
 var turtle = new TURTLE("canvas");
 const lsys = new LSystem(turtle, context);
@@ -47,5 +54,53 @@ const modAngle = function() {
 
     lsys.reset(false);
     lsys.setAngle(val);
+    lsys.draw();
+}
+
+const modRuleX = function() {
+    let val = ruleX.value;
+
+    lsys.reset(false);
+    lsys.setRules('X', val);
+    lsys.draw();
+}
+
+const modRuleF = function() {
+    let val = ruleF.value;
+
+    lsys.reset(false);
+    lsys.setRules('F', val);
+    lsys.draw();
+}
+
+const modRuleOpenBracket = function() {
+    let val = ruleOpenBracket.value;
+
+    lsys.reset(false);
+    lsys.setRules('[', val);
+    lsys.draw();
+}
+
+const modRuleClosedBracket = function() {
+    let val = ruleClosedBracket.value;
+
+    lsys.reset(false);
+    lsys.setRules(']', val);
+    lsys.draw();
+}
+
+const modRulePlus = function() {
+    let val = rulePlus.value;
+
+    lsys.reset(false);
+    lsys.setRules('+', val);
+    lsys.draw();
+}
+
+const modRuleMinus = function() {
+    let val = ruleMinus.value;
+
+    lsys.reset(false);
+    lsys.setRules('-', val);
     lsys.draw();
 }

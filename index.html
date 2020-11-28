@@ -23,14 +23,72 @@
                     <div class="explanation-axiom">
                         <p>Axiom: <code>'X'</code></p>
                         <p>Rules: 
-                            <ul>
-                                <li><code>'X': 'F[-X][X]F[-X]+FX'</code></li>
-                                <li><code>'F': 'FF'</code></li>
-                                <li><code>'[': '['</code></li>
-                                <li><code>']': ']'</code></li>
-                                <li><code>'+': '+'</code></li>
-                                <li><code>'-': '-'</code></li>
-                            </ul>
+                            <div class="input-group mb-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><code>'X'</code></span>
+                                </div>
+                                <input type="text" class="form-control" id="rule-X" 
+                                    placeholder="F[-X][+X]F[-X]+FX" aria-label="rule for X">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" 
+                                        type="button" onclick="modRuleX()">Apply</button>
+                                </div>
+                            </div>
+                            <div class="input-group mb-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><code>'F'</code></span>
+                                </div>
+                                <input type="text" class="form-control" id="rule-F" 
+                                    placeholder="FF" aria-label="rule for F">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" 
+                                        type="button" onclick="modRuleF()">Apply</button>
+                                </div>
+                            </div>
+                            <div class="input-group mb-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><code>'['</code></span>
+                                </div>
+                                <input type="text" class="form-control" id="rule-[" 
+                                    placeholder="[" aria-label="rule for [">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" 
+                                        type="button" onclick="modRuleOpenBracket()">Apply</button>
+                                </div>
+                            </div>
+                            <div class="input-group mb-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><code>']'</code></span>
+                                </div>
+                                <input type="text" class="form-control" id="rule-]" 
+                                    placeholder="]" aria-label="rule for ]">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" 
+                                        type="button" onclick="modRuleClosedBracket()">Apply</button>
+                                </div>
+                            </div>
+                            <div class="input-group mb-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><code>'+'</code></span>
+                                </div>
+                                <input type="text" class="form-control" id="rule-+" 
+                                    placeholder="+" aria-label="rule for +">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" 
+                                        type="button" onclick="modRulePlus()">Apply</button>
+                                </div>
+                            </div>
+                            <div class="input-group mb-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><code>'-'</code></span>
+                                </div>
+                                <input type="text" class="form-control" id="rule--" 
+                                    placeholder="-" aria-label="rule for -">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" 
+                                        type="button" onclick="modRuleMinus()">Apply</button>
+                                </div>
+                            </div>
                         </p>
                     </div>
                 </div>
@@ -41,20 +99,19 @@
             <div class="row">
                 <!--Sliders-->
                 <div class="controlsLeft col-12 col-lg-2">
-
                     <p>'F' segment length: 
                         <span class="text-secondary ml-2 mt-1" id="flen-span"></span>
                     </p>
-                    <input type="range" class="custom-range" id="flen" name="flen"
+                    <input type="range" class="slider col-12" id="flen" name="flen"
                         min="1" max="20" onchange="modFLen()">
                     
                     <p>Angle: 
                         <span class="text-secondary ml-2 mt-1" id="angle-span"></span>
                     </p>
-                    <input type="range" class="custom-range" id="angle" name="angle"
-                        min="1" max="90" onchange="modAngle()">
-                    
+                    <input type="range" class="slider col-12" id="angle" name="angle"
+                        min="1" max="90" onchange="modAngle()">                    
                 </div>
+
                 <!--L-System Canvas-->
                 <div class="lsys col-12 col-lg-5" id="lsys">
                     
