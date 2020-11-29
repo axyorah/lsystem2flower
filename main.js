@@ -1,5 +1,5 @@
-// GLOBALS
-//   DOM
+// ---GLOBALS---
+//    DOM
 var canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 
@@ -20,11 +20,14 @@ const ruleClosedBracket = document.getElementById("rule-]");
 const rulePlus = document.getElementById("rule-+");
 const ruleMinus = document.getElementById("rule--");
 
-//   Modules
+//    Modules
 var turtle = new TURTLE("canvas");
 const lsys = new LSystem(turtle, context);
 
-// HELPER FUNCTIONS
+//    Vars
+const MAX_ITERS = 8;
+
+// ---HELPER FUNCTIONS---
 const redraw = function () {
     lsys.reset(false);
     lsys.draw()
@@ -36,22 +39,26 @@ const recalculateAllStates = function () {
     lsys.updateState(numStates);
 }
 
-// EVENT LISTENERS
-//   Buttons
+// ---EVENT LISTENERS---
+//    Buttons
 resetBtn.addEventListener("click", function() {
     lsys.reset();
     lsys.draw();
 });
 growBtn.addEventListener("click", function() {
-    lsys.updateState(1);
-    redraw();    
+    if (lsys.states.length <= MAX_ITERS) {
+        lsys.updateState(1);
+        redraw(); 
+    } else {
+        console.log(`maximal number of iterations is reached!`)
+    }   
 });
 undoBtn.addEventListener("click", function() {
     if (lsys.states.length > 1) lsys.states.pop();
     redraw();
 });
 
-//   Sliders
+//    Sliders
 flenRng.addEventListener("input", function() {
     let val = parseInt(flenRng.value);
     flenSpan.innerText = val;
@@ -65,7 +72,7 @@ angleRng.addEventListener("input", function() {
     redraw();
 });
 
-//   Rules
+//    Rules
 ruleX.addEventListener("input", function() {
     lsys.setRules('X', ruleX.value);
     recalculateAllStates();
