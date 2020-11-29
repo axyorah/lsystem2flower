@@ -24,106 +24,63 @@ const ruleMinus = document.getElementById("rule--");
 var turtle = new TURTLE("canvas");
 const lsys = new LSystem(turtle, context);
 
-// EVENT FUNCTIONS
-const reset = function() {
-    lsys.reset();
-    lsys.draw();
-}
-
-const growOneStep = function() {
+// HELPER FUNCTIONS
+const redraw = function () {
     lsys.reset(false);
-    lsys.updateState(1);
     lsys.draw()
-}
-
-const undoOneStep = function() {
-    lsys.reset(false);
-    if (lsys.states.length > 1) {
-        lsys.states.pop();
-    }
-    lsys.draw();
-}
-
-const modFLen = function() {
-    let val = parseInt(flenRng.value);
-    flenSpan.innerText = val;
-
-    lsys.reset(false);
-    lsys.setDist(val);
-    lsys.draw();
-}
-
-const modAngle = function() {
-    let val = parseInt(angleRng.value);
-    angleSpan.innerText = val;
-
-    lsys.reset(false);
-    lsys.setAngle(val);
-    lsys.draw();
-}
-
-const modRuleX = function() {
-    let val = ruleX.value;
-
-    lsys.reset(false);
-    lsys.setRules('X', val);
-    lsys.draw();
-}
-
-const modRuleF = function() {
-    let val = ruleF.value;
-
-    lsys.reset(false);
-    lsys.setRules('F', val);
-    lsys.draw();
-}
-
-const modRuleOpenBracket = function() {
-    let val = ruleOpenBracket.value;
-
-    lsys.reset(false);
-    lsys.setRules('[', val);
-    lsys.draw();
-}
-
-const modRuleClosedBracket = function() {
-    let val = ruleClosedBracket.value;
-
-    lsys.reset(false);
-    lsys.setRules(']', val);
-    lsys.draw();
-}
-
-const modRulePlus = function() {
-    let val = rulePlus.value;
-
-    lsys.reset(false);
-    lsys.setRules('+', val);
-    lsys.draw();
-}
-
-const modRuleMinus = function() {
-    let val = ruleMinus.value;
-
-    lsys.reset(false);
-    lsys.setRules('-', val);
-    lsys.draw();
 }
 
 // EVENT LISTENERS
 //   Buttons
-growBtn.addEventListener("click", growOneStep);
-undoBtn.addEventListener("click", undoOneStep);
-resetBtn.addEventListener("click", reset);
+resetBtn.addEventListener("click", function() {
+    lsys.reset();
+    lsys.draw();
+});
+growBtn.addEventListener("click", function() {
+    lsys.updateState(1);
+    redraw();    
+});
+undoBtn.addEventListener("click", function() {
+    if (lsys.states.length > 1) lsys.states.pop();
+    redraw();
+});
 
 //   Sliders
-flenRng.addEventListener("change", modFLen);
-angleRng.addEventListener("change", modAngle);
+flenRng.addEventListener("input", function() {
+    let val = parseInt(flenRng.value);
+    flenSpan.innerText = val;
+    lsys.setDist(val);
+    redraw();
+});
+angleRng.addEventListener("input", function() {
+    let val = parseInt(angleRng.value);
+    angleSpan.innerText = val;
+    lsys.setAngle(val);
+    redraw();
+});
 
 //   Rules
-ruleX.addEventListener("input", modRuleX);
-ruleF.addEventListener("input", modRuleF);
-ruleOpenBracket.addEventListener("input", modRuleOpenBracket);
-ruleClosedBracket.addEventListener("input", modRuleClosedBracket);
-rulePlus.addEventListener("input", modRulePlus);
-ruleMinus.addEventListener("input", modRuleMinus);
+ruleX.addEventListener("input", function() {
+    lsys.setRules('X', ruleX.value);
+    redraw();
+});
+ruleF.addEventListener("input", function() {
+    lsys.setRules('F', ruleF.value);
+    redraw();
+});
+ruleOpenBracket.addEventListener("input", function() {
+    lsys.setRules('[', ruleOpenBracket.value);
+    redraw();
+});
+ruleClosedBracket.addEventListener("input", function() {
+    lsys.setRules(']', ruleClosedBracket.value);
+    redraw();
+});
+rulePlus.addEventListener("input", function() {
+    lsys.setRules('+', rulePlus.value);
+    redraw();
+});
+ruleMinus.addEventListener("input", function() {
+    lsys.setRules('-', ruleMinus.value);
+    redraw();
+});
