@@ -13,12 +13,12 @@ const angleRng = document.getElementById("angle");
 const flenSpan = document.getElementById("flen-span");
 const angleSpan = document.getElementById("angle-span");
 
-const ruleXBtn = document.getElementById("rule-X");
-const ruleFBtn = document.getElementById("rule-F");
-const ruleOpenBracketBtn = document.getElementById("rule-[");
-const ruleClosedBracketBtn = document.getElementById("rule-]");
-const rulePlusBtn = document.getElementById("rule-+");
-const ruleMinusBtn = document.getElementById("rule--");
+const ruleX = document.getElementById("rule-X");
+const ruleF = document.getElementById("rule-F");
+const ruleOpenBracket = document.getElementById("rule-[");
+const ruleClosedBracket = document.getElementById("rule-]");
+const rulePlus = document.getElementById("rule-+");
+const ruleMinus = document.getElementById("rule--");
 
 //   Modules
 var turtle = new TURTLE("canvas");
@@ -63,7 +63,7 @@ const modAngle = function() {
 }
 
 const modRuleX = function() {
-    let val = ruleXBtn.value;
+    let val = ruleX.value;
 
     lsys.reset(false);
     lsys.setRules('X', val);
@@ -71,7 +71,7 @@ const modRuleX = function() {
 }
 
 const modRuleF = function() {
-    let val = ruleFBtn.value;
+    let val = ruleF.value;
 
     lsys.reset(false);
     lsys.setRules('F', val);
@@ -79,7 +79,7 @@ const modRuleF = function() {
 }
 
 const modRuleOpenBracket = function() {
-    let val = ruleOpenBracketBtn.value;
+    let val = ruleOpenBracket.value;
 
     lsys.reset(false);
     lsys.setRules('[', val);
@@ -87,7 +87,7 @@ const modRuleOpenBracket = function() {
 }
 
 const modRuleClosedBracket = function() {
-    let val = ruleClosedBracketBtn.value;
+    let val = ruleClosedBracket.value;
 
     lsys.reset(false);
     lsys.setRules(']', val);
@@ -95,7 +95,7 @@ const modRuleClosedBracket = function() {
 }
 
 const modRulePlus = function() {
-    let val = rulePlusBtn.value;
+    let val = rulePlus.value;
 
     lsys.reset(false);
     lsys.setRules('+', val);
@@ -103,7 +103,7 @@ const modRulePlus = function() {
 }
 
 const modRuleMinus = function() {
-    let val = ruleMinusBtn.value;
+    let val = ruleMinus.value;
 
     lsys.reset(false);
     lsys.setRules('-', val);
@@ -121,9 +121,9 @@ flenRng.addEventListener("change", modFLen);
 angleRng.addEventListener("change", modAngle);
 
 //   Rules
-ruleXBtn.addEventListener("click", modRuleX);
-ruleFBtn.addEventListener("click", modRuleF);
-ruleOpenBracketBtn.addEventListener("click", modRuleOpenBracket);
-ruleClosedBracketBtn.addEventListener("click", modRuleClosedBracket);
-rulePlusBtn.addEventListener("click", modRulePlus);
-ruleMinusBtn.addEventListener("click", modRuleMinus);
+ruleX.addEventListener("input", modRuleX);
+ruleF.addEventListener("input", modRuleF);
+ruleOpenBracket.addEventListener("input", modRuleOpenBracket);
+ruleClosedBracket.addEventListener("input", modRuleClosedBracket);
+rulePlus.addEventListener("input", modRulePlus);
+ruleMinus.addEventListener("input", modRuleMinus);
