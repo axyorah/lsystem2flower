@@ -26,11 +26,14 @@ const lsys = new LSystem(turtle, context);
 
 //    Vars
 const MAX_ITERS = 8;
+context.font = "20px Arial";
+context.fillStyle = "black";
 
 // ---HELPER FUNCTIONS---
 const redraw = function () {
-    lsys.reset(false);
-    lsys.draw()
+    lsys.reset(false);    
+    lsys.draw();
+    context.fillText(`Phase ${lsys.states.length-1}`, 10, 30);
 }
 
 const recalculateAllStates = function () {
