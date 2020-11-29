@@ -30,6 +30,12 @@ const redraw = function () {
     lsys.draw()
 }
 
+const recalculateAllStates = function () {
+    const numStates = lsys.states.length - 1;
+    lsys.states = ['X'];
+    lsys.updateState(numStates);
+}
+
 // EVENT LISTENERS
 //   Buttons
 resetBtn.addEventListener("click", function() {
@@ -62,25 +68,31 @@ angleRng.addEventListener("input", function() {
 //   Rules
 ruleX.addEventListener("input", function() {
     lsys.setRules('X', ruleX.value);
+    recalculateAllStates();
     redraw();
 });
 ruleF.addEventListener("input", function() {
     lsys.setRules('F', ruleF.value);
+    recalculateAllStates();
     redraw();
 });
 ruleOpenBracket.addEventListener("input", function() {
     lsys.setRules('[', ruleOpenBracket.value);
+    recalculateAllStates();
     redraw();
 });
 ruleClosedBracket.addEventListener("input", function() {
     lsys.setRules(']', ruleClosedBracket.value);
+    recalculateAllStates();
     redraw();
 });
 rulePlus.addEventListener("input", function() {
     lsys.setRules('+', rulePlus.value);
+    recalculateAllStates();
     redraw();
 });
 ruleMinus.addEventListener("input", function() {
     lsys.setRules('-', ruleMinus.value);
+    recalculateAllStates();
     redraw();
 });
