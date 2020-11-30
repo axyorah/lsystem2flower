@@ -3,6 +3,9 @@
 var canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 
+const numSeeds = document.getElementById("numseeds");
+const axiomLabel = document.getElementById("axiom-label");
+
 const growBtn = document.getElementById("button-grow");
 const undoBtn = document.getElementById("button-undo");
 const resetBtn = document.getElementById("button-reset");
@@ -42,8 +45,19 @@ const recalculateAllStates = function () {
     lsys.updateState(numStates);
 }
 
+const updateAxiomLabel = function () {
+    axiomLabel.innerHTML = `Axiom: <code>'${lsys.axiom}'</code>`;
+}
+
 // ---EVENT LISTENERS---
 //    Buttons
+numSeeds.addEventListener("input", function () {
+    lsys.setNumSeeds(parseInt(numSeeds.value));
+    lsys.setAxiomAndAxiomAngle();
+    updateAxiomLabel();
+    recalculateAllStates();
+    redraw();
+})
 resetBtn.addEventListener("click", function() {
     lsys.reset();
     lsys.draw();

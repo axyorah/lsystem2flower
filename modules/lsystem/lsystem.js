@@ -8,8 +8,8 @@ class LSystem {
 
     dist  = 10; // [pxl] length of `F` segment
     angle = 15; // [deg] angle between child- and parent-branch directions
-    numSeeds = 3;
-    axiom = '[X][>X][>>X]';
+    numSeeds = 1; // num of radialy symetric `X` seeds in the axiom
+    axiom = '[X]';
     axiomAngle = 360 /this.numSeeds;
     states = [this.axiom];
     rules = {
@@ -44,14 +44,15 @@ class LSystem {
 
     setAxiomAndAxiomAngle = function() {
        this.axiomAngle = 360 / this.numSeeds;
-       this.axiom = '';
-       for (let i = 0; i < numSeeds; i++) {
-           this.axiom += '[';
-           for (let j = 0; j - i; i++) {
-               this.axiom += '>';
-           }
-           this.axiom += 'X]';
+       let newAxiom = '';
+       for (let i = 0; i < this.numSeeds; i++) {
+            newAxiom += '[';
+            for (let j = 0; j < i; j++) {
+                newAxiom += '>';
+            }
+            newAxiom += 'X]';            
        }
+       this.axiom = newAxiom;
        console.log(`axiom set to ${this.axiom}`);
        console.log(`axiom angle set to ${this.axiomAngle}`);
     }
