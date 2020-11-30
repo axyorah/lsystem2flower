@@ -18,10 +18,12 @@ const angleSpan = document.getElementById("angle-span");
 
 const ruleX = document.getElementById("rule-X");
 const ruleF = document.getElementById("rule-F");
+/*
 const ruleOpenBracket = document.getElementById("rule-[");
 const ruleClosedBracket = document.getElementById("rule-]");
 const rulePlus = document.getElementById("rule-+");
 const ruleMinus = document.getElementById("rule--");
+*/
 
 //    Modules
 var turtle = new TURTLE("canvas");
@@ -100,6 +102,7 @@ ruleF.addEventListener("input", function() {
     recalculateAllStates();
     redraw();
 });
+/*
 ruleOpenBracket.addEventListener("input", function() {
     lsys.setRules('[', ruleOpenBracket.value);
     recalculateAllStates();
@@ -120,3 +123,4 @@ ruleMinus.addEventListener("input", function() {
     recalculateAllStates();
     redraw();
 });
+*/
