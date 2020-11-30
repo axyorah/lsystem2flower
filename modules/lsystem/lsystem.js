@@ -8,7 +8,10 @@ class LSystem {
 
     dist  = 10; // [pxl] length of `F` segment
     angle = 15; // [deg] angle between child- and parent-branch directions
-    states = ['X'];
+    numSeeds = 3;
+    axiom = '[X][>X][>>X]';
+    axiomAngle = 360 /this.numSeeds;
+    states = [this.axiom];
     rules = {
         'X': 'F[-X][+X]F[-X]+FX',
         'F': 'FF',
@@ -16,6 +19,7 @@ class LSystem {
         ']': ']',
         '+': '+',
         '-': '-',
+        '>': '>',
     };
 
     setRules = function(key, val) {
@@ -33,12 +37,36 @@ class LSystem {
         console.log(`Angle set to: ${this.angle}`);
     }
 
+    setNumSeeds = function(val) {
+        this.numSeeds = val;
+        console.log(`#seeds set to ${this.numSeeds}`);
+    }
+
+    setAxiomAndAxiomAngle = function() {
+       this.axiomAngle = 360 / this.numSeeds;
+       this.axiom = '';
+       for (let i = 0; i < numSeeds; i++) {
+           this.axiom += '[';
+           for (let j = 0; j - i; i++) {
+               this.axiom += '>';
+           }
+           this.axiom += 'X]';
+       }
+       console.log(`axiom set to ${this.axiom}`);
+       console.log(`axiom angle set to ${this.axiomAngle}`);
+    }
+
     reset = function(resetState=true) {
         if (resetState) {
-            this.states = ['X'];
+            this.states = [this.axiom];
         }
         context.clearRect(0, 0, canvas.width, canvas.height);
-        turtle.moveTo(canvas.width/2,Math.floor(canvas.height * 0.95));
+        if (this.numSeeds === 1) {
+            turtle.moveTo(canvas.width/2,Math.floor(canvas.height * 0.95));
+        } else {
+            turtle.moveTo(canvas.width/2,canvas.height/2);
+        }
+        
         turtle.dir = - Math.PI / 2;
         turtle.stroke();
     }
@@ -62,6 +90,7 @@ class LSystem {
         let dir_stack = [];
         for (let sym of this.states[this.states.length-1]) {
             if (sym === 'F') turtle.forward(this.dist)
+            else if (sym === '>') turtle.right(this.axiomAngle)
             else if (sym === '+') turtle.right(this.angle)
             else if (sym === '-') turtle.left(this.angle)
             else if (sym === '[') {

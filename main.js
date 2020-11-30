@@ -38,7 +38,7 @@ const redraw = function () {
 
 const recalculateAllStates = function () {
     const numStates = lsys.states.length - 1;
-    lsys.states = ['X'];
+    lsys.states = [lsys.axiom];
     lsys.updateState(numStates);
 }
 
