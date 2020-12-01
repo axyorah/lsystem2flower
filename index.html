@@ -52,7 +52,7 @@
             <!--Canvases and Sliders-->
             <div class="row">
                 <!--Sliders-->
-                <div class="controlsLeft col-12 col-lg-2">
+                <div class="controls-left col-12 col-lg-2">
                     <p>'F' segment length: 
                         <span class="text-secondary ml-2 mt-1" 
                         id="flen-span">10</span>
@@ -73,9 +73,9 @@
                 <!--L-System Canvas-->
                 <div class="lsys col-12 col-lg-5" id="lsys">
                     
-                    <canvas id="canvas" height=450 width=500></canvas>
+                    <canvas id="canvas-lsys" height=450 width=500></canvas>
                     
-                    <div class="controlsBottom">
+                    <div class="controls-bottom-lsys">
                         <div class="btn-group" role="group">
                             <button type="button" id="button-undo"
                                     class="btn btn-outline-secondary">
@@ -93,7 +93,15 @@
 
                 </div>
                 <!--Pix2Pix Canvas-->
-                <div class="pix col-12 col-lg-5">
+                <div class="pix col-12 col-lg-5" id="pix2pix">
+
+                    <canvas id="canvas-pix2pix" height=450 width=500></canvas>
+
+                    <div class="controls-bottom-pix2pix">
+                        <button type="button" id="button-pix2pix"
+                                class="btn btn-outline-secondary">
+                                Flowerify!</button>
+                    </div>
 
                 </div>
             </div>

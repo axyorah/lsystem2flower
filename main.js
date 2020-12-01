@@ -21,6 +21,8 @@ const angleSpan = document.getElementById("angle-span");
 const ruleX = document.getElementById("rule-X");
 const ruleF = document.getElementById("rule-F");
 
+const flowerifyBtn = document.getElementById("button-pix2pix");
+
 //    Modules
 var turtle = new TURTLE("canvas-lsys");
 const lsys = new LSystem(turtle, lsysCanvas, lsysContext);
@@ -45,6 +47,14 @@ const recalculateAllStates = function () {
 
 const updateAxiomLabel = function () {
     axiomLabel.innerHTML = `Axiom: <code>'${lsys.axiom}'</code>`;
+}
+
+function mkRandColor() {
+    let r = Math.floor(Math.random() * 255 );
+    let g = Math.floor(Math.random() * 255 );
+    let b = Math.floor(Math.random() * 255 );
+
+    return `rgb(${r},${g},${b})`;
 }
 
 // ---EVENT LISTENERS---
@@ -74,6 +84,13 @@ undoBtn.addEventListener("click", function() {
     if (lsys.states.length > 1) lsys.states.pop();
     redraw();
 });
+flowerifyBtn.addEventListener("click", function() {    
+
+    let color = mkRandColor();
+
+    flowerifyBtn.style.border = `2px solid ${color}`;
+    flowerifyBtn.style.color = color;
+})
 
 //    Sliders
 flenRng.addEventListener("input", function() {

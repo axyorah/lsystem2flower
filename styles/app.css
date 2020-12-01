@@ -10,17 +10,24 @@ body {
     border-radius: 10px;
 }
 
-#canvas {
+canvas {
+    margin-top: 10px;
     background-color: white;
 }
 
-#lsys {
+#lsys, #pix2pix {
     display: flex;
     flex-direction: column;
 }
 
-.controlsBottom {
+.controls-bottom-lsys {
     margin-top: 5%;
     display: flex;
     justify-content: space-between;
+}
+
+.controls-bottom-pix2pix {
+    margin-top: 5%;
+    display: flex;
+    justify-content: center;
 }
