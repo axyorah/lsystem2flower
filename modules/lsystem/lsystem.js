@@ -1,7 +1,8 @@
 
 class LSystem {
-    constructor(turtle, context){
+    constructor(turtle, canvas, context){
         this.turtle = turtle;
+        this.canvas = canvas;
         this.context = context;
         this.reset();
     }
@@ -61,11 +62,15 @@ class LSystem {
         if (resetState) {
             this.states = [this.axiom];
         }
-        context.clearRect(0, 0, canvas.width, canvas.height);
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (this.numSeeds === 1) {
-            turtle.moveTo(canvas.width/2,Math.floor(canvas.height * 0.95));
+            turtle.moveTo(
+                this.canvas.width/2,
+                Math.floor(this.canvas.height * 0.95));
         } else {
-            turtle.moveTo(canvas.width/2,canvas.height/2);
+            turtle.moveTo(
+                this.canvas.width/2,
+                this.canvas.height/2);
         }
         
         turtle.dir = - Math.PI / 2;

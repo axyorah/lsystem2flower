@@ -1,7 +1,9 @@
 // ---GLOBALS---
 //    DOM
-var canvas = document.getElementById("canvas");
-const context = canvas.getContext("2d");
+let lsysCanvas = document.getElementById("canvas-lsys");
+const lsysContext = lsysCanvas.getContext("2d");
+
+let pix2xpiCanvas = document.getElementById("canvas-pix2pix");
 
 const numSeeds = document.getElementById("numseeds");
 const axiomLabel = document.getElementById("axiom-label");
@@ -20,19 +22,19 @@ const ruleX = document.getElementById("rule-X");
 const ruleF = document.getElementById("rule-F");
 
 //    Modules
-var turtle = new TURTLE("canvas");
-const lsys = new LSystem(turtle, context);
+var turtle = new TURTLE("canvas-lsys");
+const lsys = new LSystem(turtle, lsysCanvas, lsysContext);
 
 //    Vars
 const MAX_ITERS = 8;
-context.font = "20px Arial";
-context.fillStyle = "black";
+lsysContext.font = "20px Arial";
+lsysContext.fillStyle = "black";
 
 // ---HELPER FUNCTIONS---
 const redraw = function () {
     lsys.reset(false);    
     lsys.draw();
-    context.fillText(`Phase ${lsys.states.length-1}`, 10, 30);
+    lsysContext.fillText(`Phase ${lsys.states.length-1}`, 10, 30);
 }
 
 const recalculateAllStates = function () {
@@ -46,7 +48,7 @@ const updateAxiomLabel = function () {
 }
 
 // ---EVENT LISTENERS---
-//    Buttons
+//    Numeric Inputs: num seeds
 numSeeds.addEventListener("input", function () {
     lsys.setNumSeeds(parseInt(numSeeds.value));
     lsys.setAxiomAndAxiomAngle();
@@ -54,6 +56,8 @@ numSeeds.addEventListener("input", function () {
     recalculateAllStates();
     redraw();
 })
+
+//    Buttons
 resetBtn.addEventListener("click", function() {
     lsys.reset();
     lsys.draw();
@@ -85,7 +89,7 @@ angleRng.addEventListener("input", function() {
     redraw();
 });
 
-//    Rules
+//    Text Inputs: Rules
 ruleX.addEventListener("input", function() {
     lsys.setRules('X', ruleX.value);
     recalculateAllStates();
