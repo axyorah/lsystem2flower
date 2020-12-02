@@ -1,9 +1,12 @@
+//import * as tf from '@tensorflow/tfjs';
+
 // ---GLOBALS---
 //    DOM
 let lsysCanvas = document.getElementById("canvas-lsys");
 const lsysContext = lsysCanvas.getContext("2d");
 
-let pix2xpiCanvas = document.getElementById("canvas-pix2pix");
+let pix2pixCanvas = document.getElementById("canvas-pix2pix");
+const pix2pixContext = pix2pixCanvas.getContext("2d");
 
 const numSeeds = document.getElementById("numseeds");
 const axiomLabel = document.getElementById("axiom-label");
@@ -32,6 +35,11 @@ const MAX_ITERS = 8;
 lsysContext.font = "20px Arial";
 lsysContext.fillStyle = "black";
 
+//    Path to pix2pix Generator
+//    assumming http server is serving at port 8181:
+//    $ http-server . -p 8181
+const path = "http://localhost:8181/web_model/model.json";
+
 // ---HELPER FUNCTIONS---
 const redraw = function () {
     lsys.reset(false);    
@@ -49,13 +57,25 @@ const updateAxiomLabel = function () {
     axiomLabel.innerHTML = `Axiom: <code>'${lsys.axiom}'</code>`;
 }
 
-function mkRandColor() {
+const mkRandColor = function () {
     let r = Math.floor(Math.random() * 255 );
     let g = Math.floor(Math.random() * 255 );
     let b = Math.floor(Math.random() * 255 );
 
     return `rgb(${r},${g},${b})`;
 }
+
+
+
+// --- PROMISES (pix2pix -> flowerify) ---
+let generator;
+const loadGeneratorFromJson = async function() {
+    generator = await tf.loadGraphModel(path);
+    //generator.predict([tf.zeros([1,256,256,3])]); // <-- add to test!
+    //generator.load();
+    //generator.summary();
+}
+loadGeneratorFromJson();
 
 // ---EVENT LISTENERS---
 //    Numeric Inputs: num seeds
@@ -85,11 +105,16 @@ undoBtn.addEventListener("click", function() {
     redraw();
 });
 flowerifyBtn.addEventListener("click", function() {    
-
+    // make button change color each time it's clicked
     let color = mkRandColor();
 
     flowerifyBtn.style.border = `2px solid ${color}`;
     flowerifyBtn.style.color = color;
+})
+flowerifyBtn.addEventListener("click", function() {
+    // TODO: grab lsys img + preprocess + predict
+    let flower_raw = generator.predict([tf.zeros([1,256,256,3])]);
+    // TODO: unprocess + post to pix2pix canvas
 })
 
 //    Sliders
