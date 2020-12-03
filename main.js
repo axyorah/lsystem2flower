@@ -38,7 +38,7 @@ lsysContext.fillStyle = "black";
 //    Path to pix2pix Generator
 //    assumming http server is serving at port 8181:
 //    $ http-server . -p 8181
-const path = "http://localhost:8181/web_model/model.json";
+const path = "http://localhost:8181/web_model/model.json"; //http://localhost:8181/
 
 // ---HELPER FUNCTIONS---
 const redraw = function () {
@@ -65,17 +65,88 @@ const mkRandColor = function () {
     return `rgb(${r},${g},${b})`;
 }
 
-
-
-// --- PROMISES (pix2pix -> flowerify) ---
+// --- PIX2PIX GENERATOR (promise) ---
 let generator;
 const loadGeneratorFromJson = async function() {
     generator = await tf.loadGraphModel(path);
-    //generator.predict([tf.zeros([1,256,256,3])]); // <-- add to test!
-    //generator.load();
-    //generator.summary();
 }
 loadGeneratorFromJson();
+
+// --- IMG PREPROCESSING (for generator) ---
+const imagify = function (img) {
+    /*
+    convert l-system from canvas into an image which looks similar
+    to images that generator was trained on
+    (flowers passed through Canny filer with some dilation/erosions)
+    */
+    // prepare erosion/dilation kernels
+    const morph_shape = cv.MORPH_ELLIPSE;
+    let anchor = new cv.Point(-1,-1);
+    let erosion_size = 3;
+    let dilation_size = 3;
+    
+    let erosion_kernel = new cv.Mat();
+    let dilation_kernel = new cv.Mat();
+
+    erosion_kernel = cv.getStructuringElement(
+        morph_shape,
+        new cv.Size(2 * erosion_size + 1, 2 * erosion_size + 1)
+    );
+    dilation_kernel = cv.getStructuringElement(
+        morph_shape,
+        new cv.Size(2 * dilation_size + 1, 2 * dilation_size + 1)
+    );
+
+    // blur/erode/dilate
+    cv.dilate(
+        img, img, dilation_kernel, anchor, morph_shape, 
+        cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+    cv.blur(img, img, new cv.Size(3,3));
+    cv.erode(
+        img, img, erosion_kernel, anchor, morph_shape, 
+        cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+    cv.blur(img, img, new cv.Size(3,3));
+    cv.dilate(
+        img, img, dilation_kernel, anchor, morph_shape, 
+        cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+    cv.erode(
+        img, img, erosion_kernel, anchor, morph_shape, 
+        cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+
+    // run canny edge detector to make fake img similar to 
+    // what the generator was trained on
+    let edge = new cv.Mat();
+    cv.Canny(img, edge, 150, 150, 3, false);
+    cv.bitwise_not(edge, edge);
+
+    // convert to 3-channel img
+    let edge3 = new cv.Mat();
+    cv.cvtColor(edge, edge3, cv.COLOR_GRAY2RGB);
+
+    cv.imshow("canvas-pix2pix", edge3);
+    return edge3;
+};
+
+const img2tensor = function (img) {
+    return tf.tensor3d(img.data, [img.rows, img.cols, img.channels()])
+}
+
+const preprocessTensor = function (tensor) {
+    tensor = tf.cast(tensor, 'float32')
+    tensor = tensor.resizeBilinear([256, 256]);
+    tensor = tensor.div(tf.tensor([127.5])).add(tf.tensor([-1.]));
+    tensor = tensor.expandDims(0);
+    return tensor;
+}
+
+const unprocessTensor = function (tensor) {
+    tensor = tensor.squeeze(0);
+    tensor = tensor.add(tf.tensor([1.])).mul(tf.tensor([127.5]));
+    tensor = tf.cast(tensor, 'int32');
+    tensor = tensor.resizeBilinear([lsysCanvas.height, lsysCanvas.width]);
+    return tensor;
+}
+
 
 // ---EVENT LISTENERS---
 //    Numeric Inputs: num seeds
@@ -111,11 +182,21 @@ flowerifyBtn.addEventListener("click", function() {
     flowerifyBtn.style.border = `2px solid ${color}`;
     flowerifyBtn.style.color = color;
 })
-flowerifyBtn.addEventListener("click", function() {
-    // TODO: grab lsys img + preprocess + predict
-    let flower_raw = generator.predict([tf.zeros([1,256,256,3])]);
-    // TODO: unprocess + post to pix2pix canvas
-})
+// TODO: tidy!!!
+flowerifyBtn.addEventListener("click", function () {
+    // get lsystem image
+    let src = cv.imread("canvas-lsys");
+    // preprocess for generator
+    let imagified = imagify(src);
+    let tensor = img2tensor(imagified);
+    let preprocessed = preprocessTensor(tensor);
+    // generate
+    let generated = generator.predict(preprocessed); // <-- NaN...
+
+    // display
+    let unprocessed = unprocessTensor(generated);
+    tf.browser.toPixels(unprocessed, pix2pixCanvas);
+}) 
 
 //    Sliders
 flenRng.addEventListener("input", function() {
