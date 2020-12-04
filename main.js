@@ -193,7 +193,7 @@ flowerifyBtn.addEventListener("click", function () {
     let generated = generator.predict(preprocessed); // <-- NaN...
 
     // display
-    let unprocessed = unprocessTensor(generated);
+    let deprocessed = unprocessTensor(generated);
     tf.browser.toPixels(unprocessed, pix2pixCanvas);
 }) 
 
