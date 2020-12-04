@@ -139,10 +139,9 @@ const preprocessTensor = function (tensor) {
     return tensor;
 }
 
-const unprocessTensor = function (tensor) {
+const deprocessTensor = function (tensor) {
     tensor = tensor.squeeze(0);
-    tensor = tensor.add(tf.tensor([1.])).mul(tf.tensor([127.5]));
-    tensor = tf.cast(tensor, 'int32');
+    tensor = tensor.add(tf.tensor([1.])).div(tf.tensor([2.]));
     tensor = tensor.resizeBilinear([lsysCanvas.height, lsysCanvas.width]);
     return tensor;
 }
