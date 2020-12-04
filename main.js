@@ -193,8 +193,8 @@ flowerifyBtn.addEventListener("click", function () {
     let generated = generator.predict(preprocessed); // <-- NaN...
 
     // display
-    let deprocessed = unprocessTensor(generated);
-    tf.browser.toPixels(unprocessed, pix2pixCanvas);
+    let deprocessed = deprocessTensor(generated);
+    tf.browser.toPixels(deprocessed, pix2pixCanvas);
 }) 
 
 //    Sliders
