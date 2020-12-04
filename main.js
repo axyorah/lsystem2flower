@@ -27,7 +27,7 @@ const ruleF = document.getElementById("rule-F");
 const flowerifyBtn = document.getElementById("button-pix2pix");
 
 //    Modules
-var turtle = new TURTLE("canvas-lsys");
+const turtle = new TURTLE("canvas-lsys");
 const lsys = new LSystem(turtle, lsysCanvas, lsysContext);
 
 //    Vars
@@ -39,12 +39,13 @@ lsysContext.fillStyle = "black";
 //    assumming http server is serving at port 8181:
 //    $ http-server . -p 8181
 const path = "http://localhost:8181/web_model/model.json"; //http://localhost:8181/
+let generator;
 
 // ---HELPER FUNCTIONS---
 const redraw = function () {
     lsys.reset(false);    
     lsys.draw();
-    lsysContext.fillText(`Phase ${lsys.states.length-1}`, 10, 30);
+    lsysContext.strokeText(`Phase ${lsys.states.length-1}`, 10, 30);
 }
 
 const recalculateAllStates = function () {
@@ -66,11 +67,9 @@ const mkRandColor = function () {
 }
 
 // --- PIX2PIX GENERATOR (promise) ---
-let generator;
 const loadGeneratorFromJson = async function() {
     generator = await tf.loadGraphModel(path);
 }
-loadGeneratorFromJson();
 
 // --- IMG PREPROCESSING (for generator) ---
 const imagify = function (img) {
@@ -99,19 +98,19 @@ const imagify = function (img) {
 
     // blur/erode/dilate
     cv.dilate(
-        img, img, dilation_kernel, anchor, morph_shape, 
-        cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+        img, img, dilation_kernel, anchor, morph_shape);//, 
+        //cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
     cv.blur(img, img, new cv.Size(3,3));
     cv.erode(
-        img, img, erosion_kernel, anchor, morph_shape, 
-        cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
-    cv.blur(img, img, new cv.Size(3,3));
-    cv.dilate(
-        img, img, dilation_kernel, anchor, morph_shape, 
-        cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
-    cv.erode(
-        img, img, erosion_kernel, anchor, morph_shape, 
-        cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+        img, img, erosion_kernel, anchor, morph_shape);//, 
+        //cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+    //cv.blur(img, img, new cv.Size(3,3));
+    //cv.dilate(
+    //    img, img, dilation_kernel, anchor, morph_shape, 
+    //    cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+    //cv.erode(
+    //    img, img, erosion_kernel, anchor, morph_shape, 
+    //    cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
 
     // run canny edge detector to make fake img similar to 
     // what the generator was trained on
@@ -133,7 +132,7 @@ const img2tensor = function (img) {
 
 const preprocessTensor = function (tensor) {
     tensor = tf.cast(tensor, 'float32')
-    tensor = tensor.resizeBilinear([256, 256]);
+    tensor = tensor.resizeNearestNeighbor([256, 256]);
     tensor = tensor.div(tf.tensor([127.5])).add(tf.tensor([-1.]));
     tensor = tensor.expandDims(0);
     return tensor;
@@ -142,7 +141,7 @@ const preprocessTensor = function (tensor) {
 const deprocessTensor = function (tensor) {
     tensor = tensor.squeeze(0);
     tensor = tensor.add(tf.tensor([1.])).div(tf.tensor([2.]));
-    tensor = tensor.resizeBilinear([lsysCanvas.height, lsysCanvas.width]);
+    tensor = tensor.resizeNearestNeighbor([lsysCanvas.height, lsysCanvas.width]);
     return tensor;
 }
 
@@ -222,3 +221,13 @@ ruleF.addEventListener("input", function() {
     recalculateAllStates();
     redraw();
 });
+
+// RUN
+const main = function () {
+    loadGeneratorFromJson();
+    
+    lsysContext.fillStyle = "#FFFFFF";
+    lsysContext.strokeStyle = "#000000";
+}
+
+main()
