@@ -74,12 +74,12 @@ const loadGeneratorFromJson = async function() {
 // --- IMG PREPROCESSING (for generator) ---
 const imagify = function (img) {
     /*
-    convert l-system from canvas into an image which looks similar
+    convert l-system from canvas into an image that looks similar
     to images that generator was trained on
-    (flowers passed through Canny filer with some dilation/erosions)
+    (flowers passed through Canny filter with some dilation/erosions)
     */
     // prepare erosion/dilation kernels
-    const morph_shape = cv.MORPH_ELLIPSE;
+    let iters = 3;
     let anchor = new cv.Point(-1,-1);
     let erosion_size = 3;
     let dilation_size = 3;
@@ -98,19 +98,12 @@ const imagify = function (img) {
 
     // blur/erode/dilate
     cv.dilate(
-        img, img, dilation_kernel, anchor, morph_shape);//, 
+        img, img, dilation_kernel, anchor, iters);//, 
         //cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
     cv.blur(img, img, new cv.Size(3,3));
     cv.erode(
-        img, img, erosion_kernel, anchor, morph_shape);//, 
+        img, img, erosion_kernel, anchor, iters);//, 
         //cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
-    //cv.blur(img, img, new cv.Size(3,3));
-    //cv.dilate(
-    //    img, img, dilation_kernel, anchor, morph_shape, 
-    //    cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
-    //cv.erode(
-    //    img, img, erosion_kernel, anchor, morph_shape, 
-    //    cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
 
     // run canny edge detector to make fake img similar to 
     // what the generator was trained on
@@ -131,18 +124,22 @@ const img2tensor = function (img) {
 }
 
 const preprocessTensor = function (tensor) {
-    tensor = tf.cast(tensor, 'float32')
-    tensor = tensor.resizeNearestNeighbor([256, 256]);
-    tensor = tensor.div(tf.tensor([127.5])).add(tf.tensor([-1.]));
-    tensor = tensor.expandDims(0);
-    return tensor;
+    return tf.tidy(() => {
+        tensor = tf.cast(tensor, 'float32')
+        tensor = tensor.resizeBilinear([256, 256]);
+        tensor = tensor.div(tf.tensor([127.5])).add(tf.tensor([-1.]));
+        tensor = tensor.expandDims(0);
+        return tensor;
+    });
 }
 
 const deprocessTensor = function (tensor) {
-    tensor = tensor.squeeze(0);
-    tensor = tensor.add(tf.tensor([1.])).div(tf.tensor([2.]));
-    tensor = tensor.resizeNearestNeighbor([lsysCanvas.height, lsysCanvas.width]);
-    return tensor;
+    return tf.tidy(() => {
+        tensor = tensor.squeeze(0);
+        tensor = tensor.add(tf.tensor([1.])).div(tf.tensor([2.]));
+        tensor = tensor.resizeBilinear([lsysCanvas.height, lsysCanvas.width]);
+        return tensor;
+    });    
 }
 
 
@@ -180,20 +177,23 @@ flowerifyBtn.addEventListener("click", function() {
     flowerifyBtn.style.border = `2px solid ${color}`;
     flowerifyBtn.style.color = color;
 })
-// TODO: tidy!!!
-flowerifyBtn.addEventListener("click", function () {
-    // get lsystem image
-    let src = cv.imread("canvas-lsys");
-    // preprocess for generator
-    let imagified = imagify(src);
-    let tensor = img2tensor(imagified);
-    let preprocessed = preprocessTensor(tensor);
-    // generate
-    let generated = generator.predict(preprocessed); // <-- NaN...
 
-    // display
-    let deprocessed = deprocessTensor(generated);
-    tf.browser.toPixels(deprocessed, pix2pixCanvas);
+flowerifyBtn.addEventListener("click", function () {
+    tf.tidy(() => {
+        // get lsystem image
+        let src = cv.imread("canvas-lsys");
+        // preprocess for generator
+        let imagified = imagify(src);
+        let tensor = img2tensor(imagified);
+        let preprocessed = preprocessTensor(tensor);
+        // generate
+        let generated = generator.predict(preprocessed); // <-- NaN...
+        //let generated = generator.apply(preprocessed, {'training': true}); //<-- only for LayersModel
+
+        // display
+        let deprocessed = deprocessTensor(generated);
+        tf.browser.toPixels(deprocessed, pix2pixCanvas);
+    });    
 }) 
 
 //    Sliders
