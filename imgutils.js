@@ -76,9 +76,49 @@ const getGauss2D = function (sigma, sz) {
     });    
 }
 
+const getSobelX2D = function () {
+    return tf.tidy(() => {
+        let kernel = tf.tensor2d(
+            [1,0,-1,2,0,-2,1,0,-1], [3,3], dtype='float32'
+        )
+        return kernel;
+    }); 
+}
+
+const getSobelY2D = function () {
+    return tf.tidy(() => {
+        let kernel = tf.tensor2d(
+            [1,2,1,0,0,0,-1,-2,-1], [3,3], dtype='float32'
+        )
+        return kernel;
+    });
+}
+
 const getGauss4D = function (sigma, sz) {
     return tf.tidy(() => {
         let kernel = getGauss2D(sigma, sz);
+        kernel = tf.expandDims(kernel, 2);
+        kernel = tf.expandDims(kernel, 3);
+    
+        kernel = tf.tile(kernel, [1,1,3,1]);    
+        return kernel;
+    });
+}
+
+const getSobelX4D = function () {    
+    return tf.tidy(() => {
+        let kernel = getSobelX2D();
+        kernel = tf.expandDims(kernel, 2);
+        kernel = tf.expandDims(kernel, 3);
+    
+        kernel = tf.tile(kernel, [1,1,3,1]);    
+        return kernel;
+    });
+}
+
+const getSobelY4D = function () {
+    return tf.tidy(() => {
+        let kernel = getSobelY2D();
         kernel = tf.expandDims(kernel, 2);
         kernel = tf.expandDims(kernel, 3);
     
@@ -96,12 +136,72 @@ const tfblur = function (tensor, sigma, sz) {
     });
 }
 
-const tfdilate = function (tensor, sz) {
+const tfedges = function (tensor) {
+    return tf.tidy(() => {
+        let xkernel = getSobelX4D();
+        let ykernel = getSobelY4D();
 
+        let xtensor = tf.depthwiseConv2d(tensor, xkernel, [1,1], 'same');
+        let ytensor = tf.depthwiseConv2d(tensor, ykernel, [1,1], 'same');
+
+        let combined = tf.sqrt(xtensor.square().add(ytensor.square()));
+
+        return combined;
+    });
 }
 
-const tferode = function (tensor, sz) {
-    
+const tfLoadTensor = function () {
+    return tf.tidy(() => {
+        //let img = lsysContext.getImageData(0,0,lsysCanvas.widht, lsysCanvas.height);
+        let rgba = tf.browser.fromPixels(lsysCanvas, numChannels=4); // [500,450,4]
+        
+        // all data is in alpha channel -> store it in a single layer
+        let gray = rgba.max(2); // [500,450]
+
+        // convert to 3D img
+        return tf.stack([gray, gray, gray], 2); // [500,450,3]
+    });
+}
+
+const tfGetPreprocessed = function () {
+    return tf.tidy(() => {
+        // load
+        let inpt = tfLoadTensor();
+
+        // init preprocess -> to [0,1]
+        inpt = inpt.div(255.);
+ 
+        // dilate contour
+        inpt = tf.maxPool(inpt, 3, 1, 'same');
+
+        // blur
+        inpt = tfblur(inpt, 1, 3);
+
+        // invert
+        inpt = inpt.mul(tf.tensor(2.)); // sharpen edges
+        let max = tf.max(inpt);
+        inpt = max.add(inpt.mul(tf.tensor(-1))); // maxval - tensor
+
+        // erode contour
+        inpt = tf.maxPool(inpt, 3, 1, 'same');
+
+        //detect edges cheaply
+        inpt = tfedges(inpt);
+        inpt = inpt.mul(tf.tensor(2.)); // sharpen edges
+        inpt = tf.clipByValue(inpt, -1., 1.);
+
+        // proper preprocess: rescale to [-1,+1], cvt to 4D tensor
+        inpt = inpt.
+            mul(tf.tensor(2.)).
+            add(tf.tensor(-1.)).
+            mul(tf.tensor(-1.));        
+        inpt = tf.maxPool(inpt, 2, 1, 'same');
+
+        inpt = inpt.resizeBilinear([256, 256]);
+        inpt = tf.expandDims(inpt, 0);
+
+        return inpt;
+    });
 }
 
 const preprocessTensor = function (tensor) {
