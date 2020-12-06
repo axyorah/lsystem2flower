@@ -83,6 +83,7 @@ const imagify = function (img) {
     let anchor = new cv.Point(-1,-1);
     let erosion_size = 3;
     let dilation_size = 3;
+    let morph_shape = cv.MORPH_ELLIPSE;
     
     let erosion_kernel = new cv.Mat();
     let dilation_kernel = new cv.Mat();
@@ -123,6 +124,52 @@ const img2tensor = function (img) {
     return tf.tensor3d(img.data, [img.rows, img.cols, img.channels()])
 }
 
+const getGauss2D = function (sigma, sz) {
+    return tf.tidy(() => {
+        let w = 2 * sz + 1;
+        let x,y;
+    
+        let vals = [];
+        for (let i = 0; i < w; i++) {
+            for (let j = 0; j < w; j++) {
+                x = j - sz;
+                y = i - sz;
+                vals.push(
+                    1. / (2. * Math.PI * sigma) * 
+                    Math.exp(-(x * x + y * y)/(2. * sigma * sigma))
+                );                                 
+            }
+        }
+        let kernel = tf.tensor2d(vals, [w,w], dtype='float32');
+    
+        // normalize to ensure that kernell sums up to 1
+        let sm = kernel.sum();
+        kernel = kernel.div(sm);
+    
+        return kernel;
+    });    
+}
+
+const getGauss4D = function (sigma, sz) {
+    return tf.tidy(() => {
+        let kernel = getGauss2D(sigma, sz);
+        kernel = tf.expandDims(kernel, 2);
+        kernel = tf.expandDims(kernel, 3);
+    
+        kernel = tf.tile(kernel, [1,1,3,1]);    
+        return kernel;
+    });
+}
+
+const tfblur = function (tensor, sigma, sz) {
+    return tf.tidy(() => {
+        let kernel = getGauss4D(sigma, sz);
+        let blured = tf.depthwiseConv2d(tensor, kernel, [1,1], 'same');
+        blured = tf.clipByValue(blured, 0., 1.);
+        return blured;
+    });
+}
+
 const preprocessTensor = function (tensor) {
     return tf.tidy(() => {
         tensor = tf.cast(tensor, 'float32')
@@ -138,6 +185,7 @@ const deprocessTensor = function (tensor) {
         tensor = tensor.squeeze(0);
         tensor = tensor.add(tf.tensor([1.])).div(tf.tensor([2.]));
         tensor = tensor.resizeBilinear([lsysCanvas.height, lsysCanvas.width]);
+        tensor = tfblur(tensor, 1, 3);
         return tensor;
     });    
 }
@@ -186,8 +234,13 @@ flowerifyBtn.addEventListener("click", function () {
         let imagified = imagify(src);
         let tensor = img2tensor(imagified);
         let preprocessed = preprocessTensor(tensor);
+        
         // generate
-        let generated = generator.predict(preprocessed); // <-- NaN...
+        /* setting `training` opt to 'true` fixes batch norm layers
+          (during training BN is applied over batch, 
+           during inference - over entire population)
+           unfortunately, `training` opt can only be toggled for LayersModel...*/
+        let generated = generator.predict(preprocessed); // <-- NaN if unclipped BN layers
         //let generated = generator.apply(preprocessed, {'training': true}); //<-- only for LayersModel
 
         // display
