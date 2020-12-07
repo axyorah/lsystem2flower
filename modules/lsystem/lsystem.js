@@ -119,4 +119,4 @@ class LSystem {
     }
 };
 
-class exports { LSystem };
+//export { LSystem };
