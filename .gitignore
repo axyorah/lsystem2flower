@@ -1,1 +1,3 @@
 node_modules/
+modules/tfloader/*
+tfsaved_model/*
