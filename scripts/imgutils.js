@@ -100,7 +100,11 @@ const preprocessTensor = function (tensor) {
     return tf.tidy(() => {
         tensor = tf.cast(tensor, 'float32')
         tensor = tensor.resizeBilinear([256, 256]);
-        tensor = tensor.div(tf.tensor([127.5])).add(tf.tensor([-1.]));
+        tensor = tensor.div(tf.tensor([127.5])).add(tf.tensor([-1.])); // [-.99, .99]
+        tensor = tf.where(
+            tensor.greater(0.), 
+            tf.onesLike(tensor), 
+            tf.onesLike(tensor).mul(tf.tensor(-1.))); // [-1,1]   
         tensor = tensor.expandDims(0);
         return tensor;
     });
