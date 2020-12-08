@@ -1,0 +1,20 @@
+{
+  "name": "lsystem-flask",
+  "version": "1.0.0",
+  "description": "lsystem drawing canvas + pix2pix option to flowerify the lsystem drawing",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "lsystem",
+    "pix2pix",
+    "tf",
+    "flask"
+  ],
+  "author": "axyorah",
+  "license": "MIT",
+  "dependencies": {
+    "turtle-canvas": "^0.1.0"
+  }
+}

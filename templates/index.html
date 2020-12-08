@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L Systems</title>
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    
+    <!-- modules for l-system drawing -->
+    <script type="text/javascript" 
+            src="{{ url_for('static', filename='node_modules/turtle-canvas/browser/turtle-canvas.min.js')}}"></script>
+    <!-- tf for pix2pix -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <!-- opencv for img preprocessing -->
+    <script async src="https://docs.opencv.org/3.4.0/opencv.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>L-Systems</h1>
+        <div class="box">
+            <!--Explanation-->
+            <div class="row">
+                <div class="dummy col-0 col-lg-2"></div>
+                <div class="explanation col-12 col-lg-5">
+                    <div class="explanation-axiom">
+                        <p>
+                            <label for="numseeds" id="numseeds-label">#Seeds:</label>
+                            <input type="number" class="number" 
+                                id="numseeds" name="numseeds-"
+                                min="1" max="6" value="1">
+                        </p>
+                        <p id="axiom-label">Axiom: <code>'[X]'</code></p>
+                        <p>Rules: 
+                            <div class="input-group input-group-sm mb-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><code>'X'</code></span>
+                                </div>
+                                <input type="text" class="form-control" id="rule-X" 
+                                    placeholder="F[-X][+X]F[-X]+FX" aria-label="rule for X">                                
+                            </div>
+                            <div class="input-group input-group-sm mb-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><code>'F'</code></span>
+                                </div>
+                                <input type="text" class="form-control" id="rule-F" 
+                                    placeholder="FF" aria-label="rule for F">
+                            </div>
+                        </p>
+                    </div>
+                </div>
+                <div class="dummy col-0 col-lg-5"></div>
+            </div>
+
+            <!--Canvases and Sliders-->
+            <div class="row">
+                <!--Sliders-->
+                <div class="controls-left col-12 col-lg-2">
+                    <p>'F' segment length: 
+                        <span class="text-secondary ml-2 mt-1" 
+                        id="flen-span">10</span>
+                    </p>
+                    <input type="range" class="slider col-12" 
+                        id="flen" name="flen"
+                        min="1" max="20" value="10">
+                    
+                    <p>Angle: 
+                        <span class="text-secondary ml-2 mt-1" 
+                            id="angle-span">15</span>
+                    </p>
+                    <input type="range" class="slider col-12" 
+                        id="angle" name="angle"
+                        min="1" max="90" value="15">                    
+                </div>
+
+                <!--L-System Canvas-->
+                <div class="lsys col-12 col-lg-5" id="lsys">
+                    
+                    <canvas id="canvas-lsys" height=450 width=500></canvas>
+                    
+                    <div class="controls-bottom-lsys">
+                        <div class="btn-group" role="group">
+                            <button type="button" id="button-undo"
+                                    class="btn btn-outline-secondary">
+                                    <span title="undo">&#8630;</span>
+                            </button>
+                            <button type="button" id="button-grow"
+                                    class="btn btn-outline-secondary">
+                                    <span title="grow">&#8631;</span>
+                            </button>
+                        </div>
+                        <button type="button" id="button-reset"
+                                class="btn btn-secondary">
+                                Reset</button>
+                    </div>
+
+                </div>
+                <!--Pix2Pix Canvas-->
+                <div class="pix col-12 col-lg-5" id="pix2pix">
+
+                    <canvas id="canvas-pix2pix" height=450 width=500></canvas>
+
+                    <div class="controls-bottom-pix2pix">
+                        <button type="button" id="button-pix2pix"
+                                class="btn btn-outline-secondary">
+                                Flowerify!</button>
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="{{url_for('static', filename='lsystem.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='imgutils.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='main.js')}}"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
