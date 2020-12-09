@@ -50,7 +50,9 @@ const recalculateAllStates = function () {
 }
 
 const updateAxiomLabel = function () {
-    axiomLabel.innerHTML = `Axiom: <code>'${lsys.axiom}'</code>`;
+    axiomLabel.innerHTML = 
+        `Axiom: <code>'${lsys.axiom}'</code>  ` +
+        `('>' = ${Math.floor(lsys.axiomAngle*10)/10}<sup>o</sup>)`;
 }
 
 const mkRandColor = function () {
