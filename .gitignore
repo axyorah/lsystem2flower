@@ -9,10 +9,10 @@ tfsaved_model/*
 # remove files/dirs from index only (keep local):
 # git rm --cached mylogfile.log
 # git rm --cached -r mydir
-./modules/*
-./scripts/*
-./styles/*
-./index.html
-./package.json
-./package-lock.json
-./web_model/*
+modules/*
+scripts/*
+styles/*
+index.html
+package.json
+package-lock.json
+web_model/*
