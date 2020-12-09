@@ -13,10 +13,6 @@
     <!-- modules for l-system drawing -->
     <script type="text/javascript" 
             src="{{ url_for('static', filename='node_modules/turtle-canvas/browser/turtle-canvas.min.js')}}"></script>
-    <!-- tf for pix2pix -->
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-    <!-- opencv for img preprocessing -->
-    <script async src="https://docs.opencv.org/3.4.0/opencv.js"></script>
 </head>
 
 <body>
@@ -103,12 +99,14 @@
                 <div class="pix col-12 col-lg-5" id="pix2pix">
 
                     <canvas id="canvas-pix2pix" height=450 width=500></canvas>
-
-                    <div class="controls-bottom-pix2pix">
-                        <button type="button" id="button-pix2pix"
-                                class="btn btn-outline-secondary">
-                                Flowerify!</button>
-                    </div>
+                    
+                    <form action="/flowerify" method="post" enctype="multipart/form-data">                        
+                        <div class="controls-bottom-pix2pix">
+                            <button type="button" id="button-pix2pix"
+                                    class="btn btn-outline-secondary">
+                                    Flowerify!</button>
+                        </div>
+                    </form>
 
                 </div>
             </div>
@@ -117,7 +115,6 @@
     </div>
     
     <script type="text/javascript" src="{{url_for('static', filename='lsystem.js')}}"></script>
-    <script type="text/javascript" src="{{url_for('static', filename='imgutils.js')}}"></script>
     <script type="text/javascript" src="{{url_for('static', filename='main.js')}}"></script>
     
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

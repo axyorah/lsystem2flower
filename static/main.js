@@ -1,5 +1,3 @@
-//import * as tf from '@tensorflow/tfjs';
-
 // ---GLOBALS---
 //    DOM
 let lsysCanvas = document.getElementById("canvas-lsys");
@@ -26,20 +24,17 @@ const ruleF = document.getElementById("rule-F");
 
 const flowerifyBtn = document.getElementById("button-pix2pix");
 
-//    Modules
+//    l-system-related
 const turtle = new TURTLE("canvas-lsys");
 const lsys = new LSystem(turtle, lsysCanvas, lsysContext);
 
-//    Vars
+//    pix2pix-related
+let generated = new Image();
+
+//    general
 const MAX_ITERS = 8;
 lsysContext.font = "20px Arial";
 lsysContext.fillStyle = "black";
-
-//    Path to pix2pix Generator
-//    assumming http server is serving at port 8181:
-//    $ http-server . -p 8181
-//const path = "http://localhost:8181/web_model/model.json"; //http://localhost:8181/
-//let generator;
 
 // ---HELPER FUNCTIONS---
 const redraw = function () {
@@ -66,13 +61,23 @@ const mkRandColor = function () {
     return `rgb(${r},${g},${b})`;
 }
 
-// --- PIX2PIX GENERATOR (promise) ---
-//const loadGeneratorFromJson = async function() {
-//    generator = await tf.loadGraphModel(path);
-//}
+const decodeBase64Encoding = function (base64) {
+    generated.onload = function() {
+            pix2pixContext.drawImage(
+            generated, 0, 0, pix2pixCanvas.width, pix2pixCanvas.height);
+    };
+    generated.src = base64;
+}
 
-// --- IMG PREPROCESSING (for generator) ---
-// moved to `imgutils.js`
+const decodeFlatStringOfInts = function (flatstr) {
+    let datastr = flatstr.split(",")
+    let imageData = pix2pixContext.createImageData(
+        pix2pixCanvas.width, pix2pixCanvas.height);
+    for (let i = 0; i < datastr.length; i++) {
+        imageData.data[i] = parseInt(datastr[i]);
+    }
+    pix2pixContext.putImageData(imageData, 0, 0);
+}
 
 // ---EVENT LISTENERS---
 //    Numeric Inputs: num seeds
@@ -110,26 +115,22 @@ flowerifyBtn.addEventListener("click", function() {
 })
 
 flowerifyBtn.addEventListener("click", function () {
-    tf.tidy(() => {
-        // get lsystem image
-        let src = cv.imread("canvas-lsys");
-        // preprocess for generator
-        let imagified = imagify(src);
-        let tensor = img2tensor(imagified);
-        let preprocessed = preprocessTensor(tensor);
-        
-        // generate
-        /* setting `training` opt to 'true` fixes batch norm layers
-          (during training BN is applied over batch, 
-           during inference - over entire population)
-           unfortunately, `training` opt can only be toggled for LayersModel...*/
-        //let generated = generator.predict(preprocessed); // <-- NaN if unclipped BN layers
-        //let generated = generator.apply(preprocessed, {'training': true}); //<-- only for LayersModel
+    // get l-system input 
+    var b64Image = lsysCanvas.toDataURL();
+    
+    // send raw base64 canvas img to flask server
+    var xhttp = new XMLHttpRequest("image/png");           
+    xhttp.open("POST", "http://localhost:5000/flowerify", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(`data=${b64Image}`); 
 
-        // display
-        //let deprocessed = deprocessTensor(generated);
-        //tf.browser.toPixels(deprocessed, pix2pixCanvas);
-    });    
+    // display output from flask server on pix2pix canvas
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            //decodeBase64Encoding(this.responseText); // didn't work >.<
+            decodeFlatStringOfInts(this.responseText);
+        }
+    }; 
 }) 
 
 //    Sliders
@@ -159,9 +160,7 @@ ruleF.addEventListener("input", function() {
 });
 
 // RUN
-const main = function () {
-    //loadGeneratorFromJson();
-    
+const main = function () {    
     lsysContext.fillStyle = "#FFFFFF";
     lsysContext.strokeStyle = "#000000";
 }
