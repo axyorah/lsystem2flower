@@ -47,12 +47,9 @@ class LSystem {
        this.axiomAngle = 360 / this.numSeeds;
        let newAxiom = '';
        for (let i = 0; i < this.numSeeds; i++) {
-            newAxiom += '[';
-            for (let j = 0; j < i; j++) {
-                newAxiom += '>';
-            }
-            newAxiom += 'X]';            
+            newAxiom += '[X]>';
        }
+       newAxiom = newAxiom.slice(0, -1);
        this.axiom = newAxiom;
        console.log(`axiom set to ${this.axiom}`);
        console.log(`axiom angle set to ${this.axiomAngle}`);
