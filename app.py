@@ -14,7 +14,6 @@ import base64
 
 import tensorflow as tf
 from tensorflow.keras.models import load_model
-from keras.preprocessing.image import img_to_array
 
 PB_MODEL_DIR = "./tfsaved_model/"
 SECRET_KEY = os.urandom(16)
