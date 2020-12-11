@@ -1,9 +1,5 @@
 node_modules/
 modules/tfloader/*
-imgs/*
-
-# temporarily ignoring it because it's huge and i'll be testing different models
-tfsaved_model/*
 
 # artifacts from do-everything-in-js times...
 # remove files/dirs from index only (keep local):
