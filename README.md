@@ -2,7 +2,7 @@
 
 Build a self-similar stick-figure fractal by following the rules of L-Systems grammar, and "flowerify" the result with the help of pix2pix magic!
 
-gif:
+<img src="imgs/demo.gif">
 
 ## Contents
 - [Background](#background)
@@ -16,24 +16,36 @@ gif:
 
 ## Background <a name="background"></a>
 ### L-Systems <a name="lsystems"></a>
-Despite what you've been taught in Calculus class, many real-life systems do not become smoother and simpler as you zoom in, but, quite the opposite, retain their complexity on various scales. The coastline of Britain (a classic example) looks just as squiggly on the world map as it does on the regional map. The "degree" of squiggliness at different scales somehow remains the same-ish. Similarly, when you look on a picture of a circulatory system, as you zoom-in, on each scale you are presented with a similar pattern of bigger vessels branching into smaller ones, and smaller vessels branching into even smaller ones, and so on.
+Despite what you've been taught in Calculus class, many real-life systems do not become smoother and simpler as you zoom in, but, quite the opposite, retain their complexity even on the smallest of scales. The coastline of Britain (a classic example) looks just as squiggly on the world map as it does on the regional map. The "degree" of squiggliness at different scales somehow remains the same-ish. Similarly, when you look on a picture of a circulatory system, as you zoom-in, on each scale you are presented with a similar pattern of bigger vessels branching into smaller ones, and smaller vessels branching into even smaller ones, and so on.
 
-You might imagine, that if you'd want to describe such [fractal](https://en.wikipedia.org/wiki/Fractal) systems mathematically, the description would be infinitely complex. And it might as well be true for the most general case. But luckily there's an entire class of **perfectly self-similar** fractals: these beasts still boast a remarkable complexity of shapes and forms, and yet their mathematical description is delightfully simple!
+You might imagine, that if you'd want to describe such [fractal](https://en.wikipedia.org/wiki/Fractal) systems mathematically, the description would be infinitely complex. And it might as well be true for the most general case. But luckily there's an entire class of **perfectly self-similar** fractals! As the name suggests, such fractals show **exactly the same** pattern on all scales. One example of such perfectly self-similar object is the [Koch curve](https://en.wikipedia.org/wiki/Koch_snowflake):
 
-In 1968 [Aristid Lindenmayer](https://en.wikipedia.org/wiki/Aristid_Lindenmayer) devised a formal mathematical language to encode the self-similar objects, and grammatical rules to specify how these objects evolve as they "grow". The formalism became known as the [L-System](https://en.wikipedia.org/wiki/L-system). Initially, the L-System consists only of a seed. This initial state is known as the "axiom". On each step the state of the L-System is updated according to "production rules", which describe how each symbol needs to be modified when the system passed on to the next stage.
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/65/Kochsim.gif">
+
+Of course there are [many others](https://en.wikipedia.org/wiki/Self-similarity). These mathematical beasts boast a remarkable complexity of shapes and forms, and yet their mathematical description is delightfully simple!
+
+In 1968 [Aristid Lindenmayer](https://en.wikipedia.org/wiki/Aristid_Lindenmayer) devised a formal mathematical language to encode the self-similar objects, and grammatical rules to specify how these objects evolve as they "grow". The formalism became known as the [L-System](https://en.wikipedia.org/wiki/L-system). Initially, the L-System consists only of a seed. This initial state is known as the "axiom". On each step the state of the L-System is updated according to the "production rules", which describe how each symbol needs to be modified when the system passes on to the next stage.
 
 E.g., suppose we have the following system:
 ```
-Asiom: X
+Axiom: X
 Rules:
-  X -> F[-X]+X
+  X -> F[-X][+X]
   F -> FF
 ```
-This means that each time we encounter a seed `X` we are replacing it by a "branch" `F`, and on top of it - two new seeds: one facing to the left `-X` and one facing to the right `+X`. Additionally, each time we encounter a branch `F` - we replace it by double itself `FF`. In this scheme `[` means that we make a record of where we are and which direction we're facing, and `]` means that we go back to the last recorded position/direction. Following these rules the system will grow as shown on the figure below:
+The rules suggest that each time we encounter a seed `X` we are replacing it by a "branch" `F`, and on top of it - two new seeds: one facing a bit more counterclockwise `-X` and another facing a bit more clockwise `+X`. Additionally, each time we encounter a branch `F` - we replace it by double itself `FF`. In this scheme `[` means that we make a record of where we are and which direction we're facing, and `]` means that we go back to the last recorded position/direction. Following these rules the system will grow as shown on the figure below:
 
 <img width=400 src="imgs/lsystem-example.png">
 
-### pix2pix <a name="pix2pix"></a>
+You might notice that the object is looking somewhat plant-like. Of course it's a bit too regular and edgy, but the general structure is there. So very naturally you would start thinking about unleashing the power of neural nets to make a stick-figure "plant" look like a real-world plant. The exact architecture that is fit for this purpose is [pix2pix](https://phillipi.github.io/pix2pix/).
+
+### Pix2pix <a name="pix2pix"></a>
+
+[Pix2pix](https://phillipi.github.io/pix2pix/) architecture comprises of conditional adversarial networks which are tuned for image-to-image translation. Just like in classic [GANs](https://arxiv.org/abs/1406.2661) the main workhorse is an adversarial couple: a **generator**, whose purpose is to "forge" the realistic looking images, and a **discriminator**, whose purpose is to tell the real images from the ones "forged" by the generator. As generator and discriminator compete in a perpetual arms race trying to outsmart one another, we get better and better looking images!
+
+The main difference from the GANs is that in pix2pix setting both generator and discriminator are conditioned. Generator does not just get random noise and tries to shape it into an image. It gets one image **B** (e.g., doodle of a cat) and tries to translate it into another image **A** (e.g., photorealistic cat based on a doodle). Similarly, discriminator does not just get a single image and tries to predict whether it's real or fake. It always gets a pair of images **A** and **B** and tries to figure out whether **A** is a legit translation of **B** or it was forged by the generator.
+
+Of course there is a whole lot technicalities that actually make this theory work. I briefly mention some implementation details in [How it all works](#implementation) part. But if you're really interested, consider reading the original [paper by Isola et al.](https://arxiv.org/pdf/1611.07004.pdf).
 
 ## Getting Started <a name="gettingstarted"></a>
 
@@ -64,7 +76,7 @@ $ python -m pip install -r requirements.txt
 ```
 
 ### Setup <a name="setup"></a>
-Once dependencies are resolved you can start tickering with L-Systems and flowerification by running:
+Once dependencies are resolved you can start tickering with the L-Systems and flowerification by running:
 ```
 $ python app.py
 ```
@@ -90,13 +102,13 @@ To get the **B**-part of the pix2pix input the same images were passed through [
 
 The resulting combined image would look something like this:
 
-<img src="imgs/pix2pix_inpt_ab.png">
+<img width=400 src="imgs/pix2pix_inpt_ab.png">
 
 #### Generator
 The generator architecture is **mostly** the same as in [tensorflow pix2pix tutorial](https://www.tensorflow.org/tutorials/generative/pix2pix):
 - base architecture is a modified U-Net
 - each block in the encoder is Conv -> Batchnorm -> LeakyReLU
-- each block in the decoder is (2x bilinear resize + Conv) -> Batchnorm -> +/- Dropout -> ReLU
+- each block in the decoder is (2x bilinear resize + Conv) -> +/-Batchnorm -> +/- Dropout -> ReLU (there are no Batchnorm layers in the encoder part, as their weights appear to be turning to `NaN`s)
 - there are skip connections between the encoder and decoder
 - weights are clipped to be in the [-1,1] range 
 
@@ -110,12 +122,18 @@ Again, discriminator architecture is mostly the same as in [tensorflow pix2pix t
 - discriminator receives two inputs: photorealisic flower as **A**-part and black flower edge on white background as **B**-part.
 
 #### Training
-Optimizers and losses are the same as in [tensorflow pix2pix tutorial](https://www.tensorflow.org/tutorials/generative/pix2pix). The entire model was trained for 50 epochs.
+Optimizers and losses are the same as in [tensorflow pix2pix tutorial](https://www.tensorflow.org/tutorials/generative/pix2pix). The entire model was trained for 15 epochs.
 
 ### L-System preprocessing for pix2pix <a name="preparation"></a>
 Raw L-System drawing looks a bit too regular and edgy - it clearly doesn't have the same distribution as real flower edges, that were used to train pix2pix generator. To make the drawing look a bit more like the images that the model was trained on, the drawing goes through dilation, Gaussian blur, erosion and Canny edge detector. All the preprocessing is done in `python` on the `flask` server side. You can check the preprocessing functions in `app.py`.
 
+Raw L-System drawing, its preprocessed version that is fed to the generator and flowerified generator output might look like this:
+
+<img width=600 src="imgs/generated3.png">
+
 ## Acknowledgments <a name="acknowledgments"></a>
-boostrap
-turtle
-tensorflow tutorials
+I use [Bootstrap](https://getbootstrap.com/) to make the html page look somewhat presentable despite the distinctive lack of web-related skills from my part.
+
+To draw the L-System I use [turtle-canvas](https://www.npmjs.com/package/turtle-canvas).
+
+My pix2pix implementation to a large extent follows [tesorflow pix2pix tutorial](https://www.tensorflow.org/tutorials/generative/pix2pix). The entire tutorials section by Tensorflow is super amazing! Go check them!
