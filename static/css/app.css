@@ -31,3 +31,22 @@ canvas {
     display: flex;
     justify-content: center;
 }
+
+.container-fluid {
+    border-radius: 10px;
+    background-color: rgb(250,250,250);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#note {
+    color: rgb(150,150,150);
+}
+
+@media (max-width: 992px) {
+    .container-fluid {
+        height: 0px;
+        visibility: hidden;
+    }
+}
