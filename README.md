@@ -66,7 +66,11 @@ $ npm install
 $ cd ..
 ```
 
-Once `python` is installed, we can use `pip3` to take care of the dependencies listed in `requirements.txt`: [numpy](https://numpy.org/), [tensorflow](https://www.tensorflow.org/), [opencv-python](https://pypi.org/project/opencv-python/), [pillow](https://pillow.readthedocs.io/en/stable/), [flask](https://flask.palletsprojects.com/en/1.1.x/), and [wtforms](https://wtforms.readthedocs.io/en/2.3.x/). You can either install them separately by running:
+With `python` is installed, get pip up to date:
+```
+$ python -m pip install --upgrade pip
+```
+Now we can use `pip` to take care of the dependencies listed in `requirements.txt`: [numpy](https://numpy.org/), [tensorflow](https://www.tensorflow.org/), [opencv-python](https://pypi.org/project/opencv-python/), [pillow](https://pillow.readthedocs.io/en/stable/) and [flask](https://flask.palletsprojects.com/en/1.1.x/). You can either install them separately by running:
 ```bash
 $ python -m pip install <package>
 ```

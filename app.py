@@ -2,8 +2,6 @@
 
 import flask
 from flask import Flask, request, render_template
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
 
 import numpy as np
 from PIL import Image
@@ -19,9 +17,6 @@ PB_MODEL_DIR = "./tfsaved_model/"
 SECRET_KEY = os.urandom(16)
 
 app = Flask(__name__)    
-
-class SubmitImage(FlaskForm):
-    submit = SubmitField('Submit')
 
 def imagify(img):
     h,w,c = img.shape
@@ -102,8 +97,7 @@ def b64image2array(image_b64):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    form = SubmitImage()
-    return render_template("index.html", form=form)
+    return render_template("index.html")
 
 @app.route("/flowerify", methods=["GET", "POST"])
 def flowerify():
