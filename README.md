@@ -45,7 +45,7 @@ You might notice that the object is looking somewhat plant-like. Of course it's 
 
 The main difference from the GANs is that in pix2pix setting both generator and discriminator are conditioned. Generator does not just get random noise and tries to shape it into an image. It gets one image **B** (e.g., doodle of a cat) and tries to translate it into another image **A** (e.g., photorealistic cat based on a doodle). Similarly, discriminator does not just get a single image and tries to predict whether it's real or fake. It always gets a pair of images **A** and **B** and tries to figure out whether **A** is a legit translation of **B** or it was forged by the generator.
 
-Of course there is a whole lot technicalities that actually make this theory work. I briefly mention some implementation details in [How it all works](#implementation) part. But if you're really interested, consider reading the original [paper by Isola et al.](https://arxiv.org/pdf/1611.07004.pdf).
+Of course there is a whole lot of technicalities that actually make this theory work. I briefly mention some implementation details in [How it all works](#implementation) part. But if you're really interested, consider reading the original [paper by Isola et al.](https://arxiv.org/pdf/1611.07004.pdf).
 
 ## Getting Started <a name="gettingstarted"></a>
 
@@ -111,8 +111,8 @@ The resulting combined image would look something like this:
 #### Generator
 The generator architecture is **mostly** the same as in [tensorflow pix2pix tutorial](https://www.tensorflow.org/tutorials/generative/pix2pix):
 - base architecture is a modified U-Net
-- each block in the encoder is Conv -> Batchnorm -> LeakyReLU
-- each block in the decoder is (2x bilinear resize + Conv) -> +/-Batchnorm -> +/- Dropout -> ReLU (there are no Batchnorm layers in the encoder part, as their weights appear to be turning to `NaN`s)
+- each block in the encoder is Conv -> LeakyReLU (there are no Batchnorm layers in the encoder part, as their weights appear to be turning to `NaN`s)
+- each block in the decoder is (2x bilinear resize + Conv) -> Batchnorm -> +/- Dropout -> ReLU 
 - there are skip connections between the encoder and decoder
 - weights are clipped to be in the [-1,1] range 
 
