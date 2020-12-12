@@ -81,7 +81,6 @@ def edges2generated(edges):
     generator.trainable = True # <-- !
     generated_raw = generator(tensor, training=True) # float32 [-1, 1]
     
-    #generated_img = generated_raw.numpy()[-1] * 0.5 + 0.5 # float32 [0, 1]
     generated_img = ((generated_raw.numpy()[-1] + 1.) * 127.5).astype(np.uint8) # uint8 [0, 255]
     
     return generated_img
@@ -123,14 +122,6 @@ def flowerify():
     #(I'm doing it this way because somehow base64 encoding  
     # is not decoded correctly on the client side...)
     generated_flatstr = ",".join([str(ch) for ch in generated.ravel()])
-
-    # encode as base64 (doesn't work! >.<)
-    # supposedly it means: `image mode=RGBA size=500x450` 
-    #meta = "iVBORw0KGgoAAAANSUhEUgAAAfQAAAHCCAYAAAAZ9Ts6AAAgAElEQVR4Xuzd"
-    #b64_head = canvas_b64.split(",")[0] # "data:image/png;base64"
-    #generated_b64 = \
-    #    b64_head + "," + meta + \
-    #    base64.b64encode(generated.tobytes()).decode("utf-8")
 
     print(f"Image received: shape: {canvas_array.shape} min: {canvas_array.min()} max: {canvas_array.max()}")  
     print(f"Image generated: shape: {generated.shape} min: {generated.min()} max: {generated.max()}")

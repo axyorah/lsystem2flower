@@ -129,7 +129,6 @@ flowerifyBtn.addEventListener("click", function () {
     // display output from flask server on pix2pix canvas
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            //decodeBase64Encoding(this.responseText); // didn't work >.<
             decodeFlatStringOfInts(this.responseText);
         }
     }; 
