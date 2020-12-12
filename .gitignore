@@ -1,6 +1,10 @@
 node_modules/
 modules/tfloader/*
 
+imgs/img_imagified.jpg
+imgs/img_received.jpg
+utils/__pycache__/*
+
 # artifacts from do-everything-in-js times...
 # remove files/dirs from index only (keep local):
 # git rm --cached mylogfile.log
