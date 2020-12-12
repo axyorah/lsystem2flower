@@ -55,7 +55,7 @@ $ git clone https://github.com/axyorah/lsystem2flower.git
 ``` 
 
 ### Prerequisites <a name="prerequisites"></a>
-This project is written partially in `javascript` (the L-System part) and partially in `python3` (the pix2pix part), so to get things running we'd need to take care of the dependencies of both sides.
+This project is written partially in `javascript` (the L-System part) and partially in `python3` (the pix2pix part), so to get things running we'd need to take care of the dependencies on both sides.
 
 First, you need to have [python3](https://www.python.org/) and [node.js](https://nodejs.org/en/) installed on your machine.
 
@@ -66,7 +66,7 @@ $ npm install
 $ cd ..
 ```
 
-With `python` is installed, get pip up to date:
+With `python` installed, get pip up to date:
 ```
 $ python -m pip install --upgrade pip
 ```
@@ -92,7 +92,7 @@ This will start the `Flask` server. When you see the notification in your termin
 while `python` `Flask` server does all the number crunching related to pix2pix - preprocessing, generating and postprocessing. After postprocessing flowerified generator output is sent back to `js` client for rendering. 
 
 ### L-System <a name="lsystem-impl"></a>
-L-System implementation is pretty straightforward. If you're interested you can check the code in `static/lsystem.js`. Below I'll mostly describe pix2pix implementation.
+L-System implementation is pretty straightforward. If you're interested you can check the code in `static/js/lsystem.js`. Below I'll mostly describe pix2pix implementation.
 
 ### Pix2pix <a name="pix2pix-impl"></a>
 Tensorflow saved model for L-System flowerification (generator only) is stored in `tfsaved_model`. The colab notebook that you can use to rebuild/retrain the model is at `utils/edges2flower.ipynb` (**<<< ADD!!! >>>**). Here are some model details, in case if you want to do a similar project yourself:
@@ -129,7 +129,7 @@ Again, discriminator architecture is mostly the same as in [tensorflow pix2pix t
 Optimizers and losses are the same as in [tensorflow pix2pix tutorial](https://www.tensorflow.org/tutorials/generative/pix2pix). The entire model was trained for 15 epochs.
 
 ### L-System preprocessing for pix2pix <a name="preparation"></a>
-Raw L-System drawing looks a bit too regular and edgy - it clearly doesn't have the same distribution as real flower edges, that were used to train pix2pix generator. To make the drawing look a bit more like the images that the model was trained on, the drawing goes through dilation, Gaussian blur, erosion and Canny edge detector. All the preprocessing is done in `python` on the `flask` server side. You can check the preprocessing functions in `app.py`.
+Raw L-System drawing looks a bit too regular and edgy - it clearly doesn't have the same distribution as real flower edges, that were used to train pix2pix generator. To make the drawing look a bit more like the images that the model was trained on, the drawing goes through dilation, Gaussian blur, erosion and Canny edge detector. All the preprocessing is done in `python` on the `flask` server side. You can check the preprocessing functions in `utils/imgutils.py`.
 
 Raw L-System drawing, its preprocessed version that is fed to the generator and flowerified generator output might look like this:
 
