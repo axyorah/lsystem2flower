@@ -49,7 +49,7 @@ Of course there is a whole lot of technicalities that actually make this theory 
 
 ## Getting Started <a name="gettingstarted"></a>
 
-If you're on Windows, skip this paragraph and just clone the contents of this repo. However, **if you are on UNIX system, *before* cloning the repo you'll need to install git utility for [large-file-storage](https://git-lfs.github.com/)**. The reason why you need to do it has something to do with running the pix2pix generator model. To run the "flowerification" part, I use pretty massive generator model (200+ MB), that was "uploaded" to github via [git large-file-storage](https://git-lfs.github.com/). So, to fetch it correctly you need the respective utility installed. Go to https://git-lfs.github.com/ and follow the installation instructions.
+If you're on Windows, skip this paragraph and just clone the contents of this repo. However, **if you are on UNIX system, aside from cloning the repo you'll need to install git utility for [large-file-storage](https://git-lfs.github.com/)**. The reason why you need to do it has something to do with running the pix2pix generator model. To run the "flowerification" part, I use pretty massive generator model (200+ MB), that was "uploaded" to github via [git large-file-storage](https://git-lfs.github.com/). So, to fetch it correctly you need the respective utility installed. Go to https://git-lfs.github.com/ and follow the installation instructions.
 
 Once done, clone the contents of this repo to your local machine:
 ```bash
