@@ -49,14 +49,14 @@ Of course there is a whole lot of technicalities that actually make this theory 
 
 ## Getting Started <a name="gettingstarted"></a>
 
-If you're on Windows, skip this paragraph and just clone the contents of this repo. However, **if you are on UNIX system *before* cloning the repo you'll need to install git utility for [large-file-storage](https://git-lfs.github.com/)**. The reason why you need to do it has something to do with running the pix2pix generator model. To run the "flowerification" part, I use pretty massive generator model (200+ MB), that was "uploaded" to github via [git large-file-storage](https://git-lfs.github.com/). So, to fetch it correctly you need the respective utility installed. Go to https://git-lfs.github.com/ and follow the installation instructions.
+If you're on Windows, skip this paragraph and just clone the contents of this repo. However, **if you are on UNIX system, *before* cloning the repo you'll need to install git utility for [large-file-storage](https://git-lfs.github.com/)**. The reason why you need to do it has something to do with running the pix2pix generator model. To run the "flowerification" part, I use pretty massive generator model (200+ MB), that was "uploaded" to github via [git large-file-storage](https://git-lfs.github.com/). So, to fetch it correctly you need the respective utility installed. Go to https://git-lfs.github.com/ and follow the installation instructions.
 
 Once done, clone the contents of this repo to your local machine:
 ```bash
 $ git clone https://github.com/axyorah/lsystem2flower.git
 ``` 
 
-Just in case, check the size of generator weight file `keras_model/generator_50colab_nybn.h5`. If, somehow this file weights few bytes instead of 200+ MB, just download it *manually* by running this from project root:
+Just in case, check the size of the generator weight file `keras_model/generator_50colab_nybn.h5`. If, somehow, this file is only a few-bytes-heavy instead of being 200+ MB, just download it *manually* by running this from the project root:
 
 ```bash
 $ wget https://github.com/axyorah/lsystem2flower/raw/lfs_test/keras_model/generator_50colab_nybn.h5 -O keras_model/generator_50colab_nybn.h5
@@ -74,7 +74,7 @@ $ npm install
 $ cd ..
 ```
 
-With `python` installed, get pip up to date:
+With `python3` installed, get pip up to date:
 ```
 $ python -m pip install --upgrade pip
 ```
@@ -88,12 +88,12 @@ $ python -m pip install -r requirements.txt
 ```
 
 ### Setup <a name="setup"></a>
-Once dependencies are resolved you can start tickering with the L-Systems and flowerification by running:
+Once the dependencies are resolved you can start tickering with the L-Systems and flowerification by running:
 ```
 $ python app.py
 ```
 
-This will start the `Flask` server. When you see the notification in your terminal that the server is up, in your browser go to `http://localhost:5000` and have fun!
+This will start the `Flask` server. When you see the notification in your shell that the server is up, in your browser go to `http://localhost:5000` and have fun!
 
 ## How it all works <a name="implementation"></a>
 **TLDR**: `Javascript` client takes care of all the interactive bits and does the math behind the L-systems, 
@@ -103,14 +103,14 @@ while `python` `Flask` server does all the number crunching related to pix2pix -
 L-System implementation is pretty straightforward. If you're interested you can check the code in `static/js/lsystem.js`. Below I'll mostly describe pix2pix implementation.
 
 ### Pix2pix <a name="pix2pix-impl"></a>
-Keras model weights for L-System flowerification (generator only) is stored in `keras_model`. Generator architecture is loaded from `keras_model/get_model.py`. Here are some model implementation details, in case if you want to do a similar project yourself:
+Keras model weights for L-System flowerification (generator only) are stored in `keras_model`. Generator architecture is loaded from `keras_model/get_model.py`. Here are some model implementation details, in case if you want to do a similar project yourself:
 
 #### Dataset
 I used [Oxford Flowers Dataset](https://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html) with 8189 images split over 102 flower categories.
 
-**A**-part of the pix2pix input comprised of original dataset images cropped in the middle into a square shape and resized to 256x256 pixels.
+**A**-part of the pix2pix input comprises of original dataset images cropped in the middle into a square shape and resized to 256x256 pixels.
 
-To get the **B**-part of the pix2pix input the same images were passed through [Canny edge detector](https://en.wikipedia.org/wiki/Canny_edge_detector), [dilated](https://en.wikipedia.org/wiki/Dilation_(morphology)) and [eroded](https://en.wikipedia.org/wiki/Erosion_(morphology)). 
+To get the **B**-part of the pix2pix input the same images are passed through [Canny edge detector](https://en.wikipedia.org/wiki/Canny_edge_detector), [dilated](https://en.wikipedia.org/wiki/Dilation_(morphology)) and [eroded](https://en.wikipedia.org/wiki/Erosion_(morphology)). 
 
 The resulting combined image would look something like this:
 
@@ -124,13 +124,13 @@ The generator architecture is **mostly** the same as in [tensorflow pix2pix tuto
 - there are skip connections between the encoder and decoder
 - weights are clipped to be in the [-1,1] range 
 
-In decoder I use (2x bilinear resize + Conv) instead of ConvTranspose, because it results in somewhat "smoother"-looking images. Weights are regularly clipped to avoid `NaN`s. If you're training on GPU, CUDA will deal with `NaN`s gracefully, and you will not notice that something is wrong with the model until you run inference on CPU...
+In decoder I use (2x bilinear resize + Conv) instead of ConvTranspose, because it results in somewhat "smoother"-looking images. Weights and gradients are regularly clipped to avoid `NaN`s. If you're training on GPU, CUDA will deal with `NaN`s gracefully, and you will not notice that something is wrong with the model until you run inference on CPU...
 
 #### Discriminator
 Again, discriminator architecture is mostly the same as in [tensorflow pix2pix tutorial](https://www.tensorflow.org/tutorials/generative/pix2pix):
 - base is a PatchGAN
 - each block is Conv -> Batchnorm -> LeakyReLU
-- the shape of the output layer in (batch_size, 13, 13, 1)
+- the shape of the output layer is (batch_size, 13, 13, 1)
 - discriminator receives two inputs: photorealisic flower as **A**-part and black flower edge on white background as **B**-part.
 
 #### Training
