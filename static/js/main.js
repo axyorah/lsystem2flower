@@ -26,7 +26,7 @@ const flowerifyBtn = document.getElementById("button-pix2pix");
 
 //    l-system-related
 const turtle = new TURTLE("canvas-lsys");
-const lsys = new LSystem(turtle, lsysCanvas, lsysContext);
+const lsys = new LSystem(turtle, lsysCanvas);
 
 //    pix2pix-related
 let generated = new Image();
