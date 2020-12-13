@@ -33,8 +33,6 @@ let generated = new Image();
 
 //    general
 const MAX_ITERS = 8;
-lsysContext.font = "20px Arial";
-lsysContext.fillStyle = "black";
 
 // ---HELPER FUNCTIONS---
 const redraw = function () {
@@ -164,6 +162,7 @@ ruleF.addEventListener("input", function() {
 const main = function () {    
     lsysContext.fillStyle = "#FFFFFF";
     lsysContext.strokeStyle = "#000000";
+    lsysContext.font = "20px Arial";
 }
 
 main()
