@@ -12,6 +12,8 @@ from tensorflow.keras.models import load_model
 from utils.imgutils import b64image2array, canvas2edges, edges2generated, \
     generated2postprocessed, postprocessed2encoded
 
+from keras_model.get_model import Generator
+
 PB_MODEL_DIR = "./tfsaved_model/"
 SECRET_KEY = os.urandom(16)
 
@@ -52,6 +54,8 @@ def flowerify():
 if __name__ == "__main__":
     Flask.secret_key = SECRET_KEY
     
-    generator = load_model(PB_MODEL_DIR)
+    #generator = load_model(PB_MODEL_DIR)
+    generator = Generator()
+    generator.load_weights("keras_model/generator_50colab_nybn.h5")
 
     app.run(host="0.0.0.0")
