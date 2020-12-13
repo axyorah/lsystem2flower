@@ -49,10 +49,18 @@ Of course there is a whole lot of technicalities that actually make this theory 
 
 ## Getting Started <a name="gettingstarted"></a>
 
-Clone the contents of this repo to your local machine:
-```
+If you're on Windows, skip this paragraph and just clone the contents of this repo. However, **if you are on UNIX system *before* cloning the repo you'll need to install git utility for [large-file-storage](https://git-lfs.github.com/)**. The reason why you need to do it has something to do with running the pix2pix generator model. To run the "flowerification" part, I use pretty massive generator model (200+ MB), that was "uploaded" to github via [git large-file-storage](https://git-lfs.github.com/). So, to fetch it correctly you need the respective utility installed. Go to https://git-lfs.github.com/ and follow the installation instructions.
+
+Once done, clone the contents of this repo to your local machine:
+```bash
 $ git clone https://github.com/axyorah/lsystem2flower.git
 ``` 
+
+Just in case, check the size of generator weight file `keras_model/generator_50colab_nybn.h5`. If, somehow this file weights few bytes instead of 200+ MB, just download it *manually* by running this from project root:
+
+```bash
+$ wget https://github.com/axyorah/lsystem2flower/raw/lfs_test/keras_model/generator_50colab_nybn.h5 -O keras_model/generator_50colab_nybn.h5
+```
 
 ### Prerequisites <a name="prerequisites"></a>
 This project is written partially in `javascript` (the L-System part) and partially in `python3` (the pix2pix part), so to get things running we'd need to take care of the dependencies on both sides.
@@ -95,7 +103,7 @@ while `python` `Flask` server does all the number crunching related to pix2pix -
 L-System implementation is pretty straightforward. If you're interested you can check the code in `static/js/lsystem.js`. Below I'll mostly describe pix2pix implementation.
 
 ### Pix2pix <a name="pix2pix-impl"></a>
-Tensorflow saved model for L-System flowerification (generator only) is stored in `tfsaved_model`. The colab notebook that you can use to rebuild/retrain the model is at `utils/edges2flower.ipynb` (**<<< ADD!!! >>>**). Here are some model details, in case if you want to do a similar project yourself:
+Keras model weights for L-System flowerification (generator only) is stored in `keras_model`. Generator architecture is loaded from `keras_model/get_model.py`. Here are some model implementation details, in case if you want to do a similar project yourself:
 
 #### Dataset
 I used [Oxford Flowers Dataset](https://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html) with 8189 images split over 102 flower categories.
