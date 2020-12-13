@@ -3,12 +3,12 @@ modules/tfloader/*
 
 imgs/img_imagified.jpg
 imgs/img_received.jpg
-utils/__pycache__/*
+__pycache__/*
+
+# tf saved model (i use keras weights now)
+tfsaved_model/*
 
 # artifacts from do-everything-in-js times...
-# remove files/dirs from index only (keep local):
-# git rm --cached mylogfile.log
-# git rm --cached -r mydir
 modules/*
 scripts/*
 styles/*
@@ -16,3 +16,7 @@ index.html
 package.json
 package-lock.json
 web_model/*
+
+# memo to self: remove files/dirs from index only (keep local):
+# git rm --cached mylogfile.log
+# git rm --cached -r mydir
