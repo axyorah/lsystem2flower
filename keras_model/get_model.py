@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-import os 
 import tensorflow as tf
-import numpy as np
 
 OUTPUT_CHANNELS = 3
 
@@ -40,6 +38,20 @@ def smooth_upsample(filters, k_size, init_filters, init_size, apply_dropout=Fals
 
     return tf.keras.Model(inputs=[inpt], outputs=[x])
 
+def last(init_filters, init_size):
+    initializer = tf.random_normal_initializer(0., 0.02)
+    
+    inpt = tf.keras.layers.Input(shape=(init_filters, *init_size))
+    
+    last_layer = tf.keras.layers.Conv2DTranspose(
+        OUTPUT_CHANNELS, 4,
+        strides=2,
+        padding='same',
+        kernel_initializer=initializer,
+        activation='tanh') # (bs, 256, 256, 3)
+    
+    return tf.keras.models.Model(inputs=[inpt], outputs=[last_layer(inpt)])
+
 def Generator():
     inputs = tf.keras.layers.Input(shape=[256,256,3])
 
@@ -57,7 +69,7 @@ def Generator():
     # 3rd param is a sum of prev ele of `up` stack + 
     # skip-connection sibling from `down` stack (which has same same dims)
     # => 3rd param is 2x 1st param of prev
-    # (for every element except for first)
+    # (for every element except for the first)
     up_stack = [
         smooth_upsample(512, 4, 512, 1, apply_dropout=True), # (bs, 2, 2, 1024)
         smooth_upsample(512, 4, 1024, 2, apply_dropout=True), # (bs, 4, 4, 1024)
@@ -67,14 +79,6 @@ def Generator():
         smooth_upsample(128, 4, 512, 32), # (bs, 64, 64, 256)
         smooth_upsample(64, 4, 256, 64), # (bs, 128, 128, 128)
     ]
-
-    initializer = tf.random_normal_initializer(0., 0.02)
-    last = tf.keras.layers.Conv2DTranspose(
-        OUTPUT_CHANNELS, 4,
-        strides=2,
-        padding='same',
-        kernel_initializer=initializer,
-        activation='tanh') # (bs, 256, 256, 3)
 
     x = inputs
 
@@ -91,7 +95,7 @@ def Generator():
         x = up(x)
         x = tf.keras.layers.Concatenate()([x, skip])
 
-    x = last(x)
+    x = last(128,(128,128))(x)
 
     return tf.keras.Model(inputs=inputs, outputs=x)
 
@@ -113,6 +117,3 @@ def Discriminator():
         kernel_initializer=initializer)(down4) # (bs, 13, 13, 1)
 
     return tf.keras.Model(inputs=[inp, tar], outputs=last)
-
-#generator = Generator()
-#discriminator = Discriminator()

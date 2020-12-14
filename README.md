@@ -49,18 +49,10 @@ Of course there is a whole lot of technicalities that actually make this theory 
 
 ## Getting Started <a name="gettingstarted"></a>
 
-If you're on Windows, skip this paragraph and just clone the contents of this repo. However, **if you are on UNIX system, aside from cloning the repo you'll need to install git utility for [large-file-storage](https://git-lfs.github.com/)**. The reason why you need to do it has something to do with running the pix2pix generator model. To run the "flowerification" part, I use pretty massive generator model (200+ MB), that was "uploaded" to github via [git large-file-storage](https://git-lfs.github.com/). So, to fetch it correctly you need the respective utility installed. Go to https://git-lfs.github.com/ and follow the installation instructions.
-
-Once done, clone the contents of this repo to your local machine:
+Clone the contents of this repo to your local machine:
 ```bash
 $ git clone https://github.com/axyorah/lsystem2flower.git
 ``` 
-
-Just in case, check the size of the generator weight file `keras_model/generator_50colab_nybn.h5`. If, somehow, this file is only a few-bytes-heavy instead of being 200+ MB, just download it *manually* by running this from the project root:
-
-```bash
-$ wget https://github.com/axyorah/lsystem2flower/raw/lfs_test/keras_model/generator_50colab_nybn.h5 -O keras_model/generator_50colab_nybn.h5
-```
 
 ### Prerequisites <a name="prerequisites"></a>
 This project is written partially in `javascript` (the L-System part) and partially in `python3` (the pix2pix part), so to get things running we'd need to take care of the dependencies on both sides.

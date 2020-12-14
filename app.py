@@ -14,7 +14,7 @@ from utils.imgutils import b64image2array, canvas2edges, edges2generated, \
 
 from keras_model.get_model import Generator
 
-KERAS_WEIGHTS = "./keras_model/generator_50colab_nybn.h5"
+KERAS_WEIGHTS = "./keras_model/weights_50nybn/"#"./keras_model/generator_50colab_nybn.h5"
 SECRET_KEY = os.urandom(16)
 
 app = Flask(__name__)    
@@ -55,6 +55,9 @@ if __name__ == "__main__":
     Flask.secret_key = SECRET_KEY
     
     generator = Generator()
-    generator.load_weights(KERAS_WEIGHTS)
+    for i,layer in enumerate(generator.layers):
+        if layer.get_weights():
+            layer_name = os.path.join(KERAS_WEIGHTS, f"layer_{i}.h5")
+            layer.load_weights(layer_name)
 
     app.run(host="0.0.0.0")
