@@ -95,7 +95,7 @@ while `python` `Flask` server does all the number crunching related to pix2pix -
 L-System implementation is pretty straightforward. If you're interested you can check the code in `static/js/lsystem.js`. Below I'll mostly describe pix2pix implementation.
 
 ### Pix2pix <a name="pix2pix-impl"></a>
-Keras model weights for L-System flowerification (generator only) are stored in `keras_model`. Generator architecture is loaded from `keras_model/get_model.py`. Here are some model implementation details, in case if you want to do a similar project yourself:
+Keras model weights for L-System flowerification (generator only) are stored in `keras_model/weights_50nybn/`. Generator architecture is loaded from `keras_model/get_model.py`. Here are some model implementation details, in case if you want to do a similar project yourself:
 
 #### Dataset
 I used [Oxford Flowers Dataset](https://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html) with 8189 images split over 102 flower categories.
