@@ -69,22 +69,12 @@ const decodeBase64Encoding = function (base64) {
     generated.src = base64;
 }
 
-const decodeFlatStringOfInts = function (flatstr) {
+const flatStringOfIntsToCanvas = function (flatstr) {
     let datastr = flatstr.split(",")
     let imageData = pix2pixContext.createImageData(
         pix2pixCanvas.width, pix2pixCanvas.height);
     for (let i = 0; i < datastr.length; i++) {
         imageData.data[i] = parseInt(datastr[i]);
-    }
-    pix2pixContext.putImageData(imageData, 0, 0);
-}
-
-const arrayOfIntsToCanvas = function (arr) {
-    let imageData = pix2pixContext.createImageData(
-        pix2pixCanvas.width, pix2pixCanvas.height
-    );
-    for (let i = 0; i < arr.length; i++) {
-        imageData.data[i] = arr[i];
     }
     pix2pixContext.putImageData(imageData, 0, 0);
 }
@@ -143,7 +133,7 @@ flowerifyBtn.addEventListener("click", function () {
 
     // send raw base64 canvas img to flask server and display response on canvas
     postData("http://localhost:5000/flowerify", { data: b64Image })
-        .then( res => decodeFlatStringOfInts(res["data"]) );
+        .then( res => flatStringOfIntsToCanvas(res["data"]) );
 }) 
 
 //    Sliders
