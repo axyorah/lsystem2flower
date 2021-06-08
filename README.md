@@ -126,7 +126,7 @@ Again, discriminator architecture is mostly the same as in [tensorflow pix2pix t
 - discriminator receives two inputs: photorealisic flower as **A**-part and black flower edge on white background as **B**-part.
 
 #### Training
-Optimizers and losses are the same as in [tensorflow pix2pix tutorial](https://www.tensorflow.org/tutorials/generative/pix2pix). The entire model was trained for 15 epochs.
+Optimizers and losses are the same as in [tensorflow pix2pix tutorial](https://www.tensorflow.org/tutorials/generative/pix2pix). The entire model was trained for 50 epochs.
 
 ### L-System preprocessing for pix2pix <a name="preparation"></a>
 Raw L-System drawing looks a bit too regular and edgy - it clearly doesn't have the same distribution as real flower edges, that were used to train pix2pix generator. To make the drawing look a bit more like the images that the model was trained on, the drawing goes through dilation, Gaussian blur, erosion and Canny edge detector. All the preprocessing is done in `python` on the `flask` server side. You can check the preprocessing functions in `utils/imgutils.py`.
