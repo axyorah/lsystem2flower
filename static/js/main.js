@@ -79,6 +79,30 @@ const decodeFlatStringOfInts = function (flatstr) {
     pix2pixContext.putImageData(imageData, 0, 0);
 }
 
+const arrayOfIntsToCanvas = function (arr) {
+    let imageData = pix2pixContext.createImageData(
+        pix2pixCanvas.width, pix2pixCanvas.height
+    );
+    for (let i = 0; i < arr.length; i++) {
+        imageData.data[i] = arr[i];
+    }
+    pix2pixContext.putImageData(imageData, 0, 0);
+}
+
+const postData = async function (url = "", data = {}) {
+    const response = await fetch(url, {
+        method: "POST",
+        mode: "cors", 
+        cache: "no-cache", 
+        credentials: "same-origin", 
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        redirect: "follow", 
+        referrerPolicy: "no-referrer", 
+        body: JSON.stringify(data) 
+    });
+    return response.json();
+}
+
 // ---EVENT LISTENERS---
 //    Numeric Inputs: num seeds
 numSeeds.addEventListener("input", function () {
@@ -113,23 +137,13 @@ flowerifyBtn.addEventListener("click", function() {
     flowerifyBtn.style.border = `2px solid ${color}`;
     flowerifyBtn.style.color = color;
 })
-
 flowerifyBtn.addEventListener("click", function () {
     // get l-system input 
-    var b64Image = lsysCanvas.toDataURL();
-    
-    // send raw base64 canvas img to flask server
-    var xhttp = new XMLHttpRequest("image/png");           
-    xhttp.open("POST", "http://localhost:5000/flowerify", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(`data=${b64Image}`); 
+    let b64Image = lsysCanvas.toDataURL();
 
-    // display output from flask server on pix2pix canvas
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            decodeFlatStringOfInts(this.responseText);
-        }
-    }; 
+    // send raw base64 canvas img to flask server and display response on canvas
+    postData("http://localhost:5000/flowerify", { data: b64Image })
+        .then( res => decodeFlatStringOfInts(res["data"]) );
 }) 
 
 //    Sliders

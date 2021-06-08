@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from flask import Flask, request, render_template
+import json
 import os
 
 from utils.imgutils import b64image2array, canvas2edges, edges2generated, \
@@ -27,8 +28,11 @@ def index():
 
 @app.route("/flowerify", methods=["GET", "POST"])
 def flowerify():
+    # get request data dictionary
+    data = json.loads(request.get_data().decode())
+
     # get raw base64 encoded img
-    canvas_b64 = request.values["data"]
+    canvas_b64 = data["data"]
 
     # decode/preprocess 
     canvas_array = b64image2array(canvas_b64)
@@ -50,7 +54,7 @@ def flowerify():
     print(f"Image generated: shape: {generated.shape} min: {generated.numpy().min()} max: {generated.numpy().max()}")
     print(f"Image postprocessed: shape: {postprocessed.shape} min {postprocessed.min()} max: {postprocessed.max()}")
 
-    return encoded
+    return json.dumps({ "data": encoded })
 
 
 if __name__ == "__main__":
