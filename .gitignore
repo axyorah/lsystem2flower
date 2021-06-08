@@ -3,7 +3,7 @@ modules/tfloader/*
 
 imgs/img_imagified.jpg
 imgs/img_received.jpg
-__pycache__/*
+*__pycache__*
 
 # tf saved model (i use keras weights now)
 tfsaved_model/*
